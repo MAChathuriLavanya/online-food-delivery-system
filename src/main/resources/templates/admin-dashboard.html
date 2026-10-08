@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard - Food Delivery System</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container py-4">
+<div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+    <h2 class="text-primary fw-bold">Admin Management Panel</h2>
+    <div>
+        <a href="/menu" class="btn btn-outline-primary me-2">View Customer Menu</a>
+        <a href="/" class="btn btn-outline-danger">Logout</a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Forms Section -->
+    <div class="col-md-4">
+        <!-- Add Item Form -->
+        <div class="card p-3 shadow-sm mb-4">
+            <h5 class="mb-3 text-success">Add New Food Item</h5>
+            <form action="/admin/add-item" method="post">
+                <div class="mb-2">
+                    <label class="form-label">Item Name</label>
+                    <input type="text" name="name" class="form-control" placeholder="eg: Burger" required>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Category</label>
+                    <input type="text" name="category" class="form-control" placeholder="eg: Fast Food, Beverages" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Price (Rs.)</label>
+                    <input type="number" step="0.01" name="price" class="form-control" placeholder="eg: 450.00" required>
+                </div>
+                <button type="submit" class="btn btn-success w-100">Add Item</button>
+            </form>
+        </div>
+
+        <!-- Add Admin Form -->
+        <div class="card p-3 shadow-sm mb-4 border-warning">
+            <h5 class="mb-3 text-warning-emphasis">Add New Admin Account</h5>
+            <form action="/admin/add-admin" method="post">
+                <div class="mb-2">
+                    <label class="form-label">New Admin Username</label>
+                    <input type="text" name="username" class="form-control" placeholder="Enter username" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" placeholder="Enter password" required>
+                </div>
+                <button type="submit" class="btn btn-warning w-100">Create Admin Account</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tables Section -->
+    <div class="col-md-8">
+        <div class="card p-3 shadow-sm mb-4">
+            <h5 class="mb-3">Available Food Items</h5>
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${items}">
+                    <td th:text="${item.id}"></td>
+                    <td th:text="${item.name}"></td>
+                    <td th:text="${item.category}"></td>
+                    <td th:text="${'Rs. ' + item.price}"></td>
+                    <td>
+                        <a th:href="@{'/admin/delete-item/' + ${item.id}}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this item?')">Delete</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Registered Users Table -->
+        <div class="card p-3 shadow-sm">
+            <h5 class="mb-3">Registered System Users</h5>
+            <table class="table table-striped table-bordered">
+                <thead class="table-secondary">
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.username}"></td>
+                    <td>
+                        <span th:class="${user.role == 'ADMIN' ? 'badge bg-danger' : 'badge bg-info'}" th:text="${user.role}">Role</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
