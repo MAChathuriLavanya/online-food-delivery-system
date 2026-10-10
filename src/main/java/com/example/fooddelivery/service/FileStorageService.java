@@ -109,8 +109,8 @@ public class FileStorageService {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length == 5) {
-                    orders.add(new Order(parts[0], parts[1], parts[2], Integer.parseInt(parts[3]), Double.parseDouble(parts[4])));
+                if (parts.length == 8) {
+                    orders.add(new Order(parts[0], parts[1], parts[2], parts[3], parts[4], Integer.parseInt(parts[5]), Double.parseDouble(parts[6]), parts[7]));
                 }
             }
         } catch (IOException e) {
@@ -121,7 +121,7 @@ public class FileStorageService {
 
     public void saveOrder(Order order) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(ORDERS_FILE, true))) {
-            writer.write(order.getOrderId() + "," + order.getUsername() + "," + order.getItemName() + "," + order.getQuantity() + "," + order.getTotalPrice());
+            writer.write(order.getOrderId() + "," + order.getCustomerName() + "," + order.getAddress() + "," + order.getPhone() + "," + order.getItemName() + "," + order.getQuantity() + "," + order.getTotalPrice() + "," + order.getPaymentMethod());
             writer.newLine();
         } catch (IOException e) {
             e.printStackTrace();

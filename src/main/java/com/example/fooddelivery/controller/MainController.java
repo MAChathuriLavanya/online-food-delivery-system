@@ -16,7 +16,6 @@ public class MainController {
 
     private final FileStorageService fileService;
 
-    // Permanent Admin Credentials
     private final String PERMANENT_ADMIN_USER = "admin";
     private final String PERMANENT_ADMIN_PASS = "admin123";
 
@@ -24,13 +23,11 @@ public class MainController {
         this.fileService = fileService;
     }
 
-    // Landing Page - User Registration
     @GetMapping("/")
     public String homePage() {
         return "register";
     }
 
-    // Login Page
     @GetMapping("/login")
     public String loginPage() {
         return "login";
@@ -38,12 +35,10 @@ public class MainController {
 
     @PostMapping("/login")
     public String login(@RequestParam String username, @RequestParam String password, Model model) {
-        // Permanent Admin Check
         if (PERMANENT_ADMIN_USER.equals(username) && PERMANENT_ADMIN_PASS.equals(password)) {
             return "redirect:/admin";
         }
 
-        // Regular Users & Added Admins Check
         List<User> users = fileService.getAllUsers();
         for (User u : users) {
             if (u.getUsername().equals(username) && u.getPassword().equals(password)) {
@@ -59,7 +54,6 @@ public class MainController {
         return "login";
     }
 
-    // Register Account
     @PostMapping("/register")
     public String registerUser(@RequestParam String username, @RequestParam String password) {
         String id = UUID.randomUUID().toString().substring(0, 5);
@@ -68,7 +62,6 @@ public class MainController {
         return "redirect:/login";
     }
 
-    // Admin Dashboard
     @GetMapping("/admin")
     public String adminDashboard(Model model) {
         model.addAttribute("items", fileService.getAllItems());
@@ -99,20 +92,28 @@ public class MainController {
         return "redirect:/admin";
     }
 
-    // Customer Menu Page
     @GetMapping("/menu")
     public String customerMenu(Model model) {
         model.addAttribute("items", fileService.getAllItems());
         return "menu";
     }
 
-    // Place Order Action
-    @PostMapping("/order/place")
-    public String placeOrder(@RequestParam String itemName, @RequestParam double price, @RequestParam int quantity) {
+    // Place Order Routing with Delivery Details & Payment
+    @PostMapping("/order/checkout")
+    public String checkoutOrder(@RequestParam String itemName,
+                                @RequestParam double price,
+                                @RequestParam int quantity,
+                                @RequestParam String customerName,
+                                @RequestParam String address,
+                                @RequestParam String phone,
+                                @RequestParam String paymentMethod) {
+
         String orderId = UUID.randomUUID().toString().substring(0, 5);
         double totalPrice = price * quantity;
-        Order newOrder = new Order(orderId, "Customer", itemName, quantity, totalPrice);
+
+        Order newOrder = new Order(orderId, customerName, address, phone, itemName, quantity, totalPrice, paymentMethod);
         fileService.saveOrder(newOrder);
+
         return "redirect:/menu?ordered=true";
     }
 }
