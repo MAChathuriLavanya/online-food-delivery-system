@@ -19,7 +19,14 @@ public class MainController {
         this.fileService = fileService;
     }
 
+    // Home Page - User Registration Landing Page
     @GetMapping("/")
+    public String homePage() {
+        return "register";
+    }
+
+    // Login Page
+    @GetMapping("/login")
     public String loginPage() {
         return "login";
     }
@@ -40,19 +47,16 @@ public class MainController {
         return "login";
     }
 
-    @GetMapping("/register")
-    public String registerPage() {
-        return "register";
-    }
-
+    // Register User
     @PostMapping("/register")
     public String registerUser(@RequestParam String username, @RequestParam String password) {
         String id = UUID.randomUUID().toString().substring(0, 5);
         User newUser = new User(id, username, password, "USER");
         fileService.saveUser(newUser);
-        return "redirect:/";
+        return "redirect:/login";
     }
 
+    // Admin Dashboard (Admin Only)
     @GetMapping("/admin")
     public String adminDashboard(Model model) {
         model.addAttribute("items", fileService.getAllItems());
@@ -74,6 +78,7 @@ public class MainController {
         return "redirect:/admin";
     }
 
+    // Create New Admin Account (Admin Only)
     @PostMapping("/admin/add-admin")
     public String addAdmin(@RequestParam String username, @RequestParam String password) {
         String id = UUID.randomUUID().toString().substring(0, 5);
@@ -82,6 +87,7 @@ public class MainController {
         return "redirect:/admin";
     }
 
+    // Customer Menu View
     @GetMapping("/menu")
     public String customerMenu(Model model) {
         model.addAttribute("items", fileService.getAllItems());
