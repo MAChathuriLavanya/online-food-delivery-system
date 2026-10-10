@@ -13,7 +13,7 @@
 </div>
 
 <div class="row">
-    <!-- Forms Column -->
+    <!-- Left Forms Column -->
     <div class="col-md-4">
         <div class="card p-3 shadow-sm mb-4">
             <h5 class="mb-3 text-success">Add New Food Item</h5>
@@ -50,9 +50,9 @@
         </div>
     </div>
 
-    <!-- Tables Column -->
+    <!-- Right Tables Column -->
     <div class="col-md-8">
-        <!-- Customer Orders with Delivery & Payment Details -->
+        <!-- Customer Orders with Multi-Item Details -->
         <div class="card p-3 shadow-sm mb-4 border-success">
             <h5 class="mb-3 text-success">Placed Customer Orders & Delivery Details</h5>
             <div class="table-responsive">
@@ -63,8 +63,7 @@
                         <th>Customer Name</th>
                         <th>Address</th>
                         <th>Phone</th>
-                        <th>Item</th>
-                        <th>Qty</th>
+                        <th>Items Ordered</th>
                         <th>Total Price</th>
                         <th>Payment</th>
                     </tr>
@@ -75,9 +74,8 @@
                         <td th:text="${order.customerName}"></td>
                         <td th:text="${order.address}"></td>
                         <td th:text="${order.phone}"></td>
-                        <td th:text="${order.itemName}"></td>
-                        <td th:text="${order.quantity}"></td>
-                        <td th:text="${'Rs. ' + order.totalPrice}"></td>
+                        <td th:text="${order.itemName}" class="fw-bold text-dark"></td>
+                        <td th:text="${'Rs. ' + order.totalPrice}" class="fw-bold text-success"></td>
                         <td>
                             <span class="badge bg-primary" th:text="${order.paymentMethod}"></span>
                         </td>
