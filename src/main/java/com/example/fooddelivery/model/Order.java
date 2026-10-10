@@ -6,17 +6,15 @@ public class Order {
     private String address;
     private String phone;
     private String itemName;
-    private int quantity;
     private double totalPrice;
     private String paymentMethod;
 
-    public Order(String orderId, String customerName, String address, String phone, String itemName, int quantity, double totalPrice, String paymentMethod) {
+    public Order(String orderId, String customerName, String address, String phone, String itemName, double totalPrice, String paymentMethod) {
         this.orderId = orderId;
         this.customerName = customerName;
         this.address = address;
         this.phone = phone;
         this.itemName = itemName;
-        this.quantity = quantity;
         this.totalPrice = totalPrice;
         this.paymentMethod = paymentMethod;
     }
@@ -36,9 +34,6 @@ public class Order {
 
     public String getItemName() { return itemName; }
     public void setItemName(String itemName) { this.itemName = itemName; }
-
-    public int getQuantity() { return quantity; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
 
     public double getTotalPrice() { return totalPrice; }
     public void setTotalPrice(double totalPrice) { this.totalPrice = totalPrice; }
