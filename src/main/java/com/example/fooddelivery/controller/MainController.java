@@ -15,11 +15,15 @@ public class MainController {
 
     private final FileStorageService fileService;
 
+    // Permanent Admin Credentials
+    private final String PERMANENT_ADMIN_USER = "admin";
+    private final String PERMANENT_ADMIN_PASS = "admin123";
+
     public MainController(FileStorageService fileService) {
         this.fileService = fileService;
     }
 
-    // Home Page - User Registration Landing Page
+    // Landing Page - User Registration
     @GetMapping("/")
     public String homePage() {
         return "register";
@@ -33,6 +37,12 @@ public class MainController {
 
     @PostMapping("/login")
     public String login(@RequestParam String username, @RequestParam String password, Model model) {
+        // 1. Permanent Admin Login Check
+        if (PERMANENT_ADMIN_USER.equals(username) && PERMANENT_ADMIN_PASS.equals(password)) {
+            return "redirect:/admin";
+        }
+
+        // 2. Check Registered Users and Created Admins
         List<User> users = fileService.getAllUsers();
         for (User u : users) {
             if (u.getUsername().equals(username) && u.getPassword().equals(password)) {
@@ -43,6 +53,7 @@ public class MainController {
                 }
             }
         }
+
         model.addAttribute("error", "Invalid Username or Password!");
         return "login";
     }
@@ -78,7 +89,7 @@ public class MainController {
         return "redirect:/admin";
     }
 
-    // Create New Admin Account (Admin Only)
+    // Create Admin Account (Admin Only)
     @PostMapping("/admin/add-admin")
     public String addAdmin(@RequestParam String username, @RequestParam String password) {
         String id = UUID.randomUUID().toString().substring(0, 5);
