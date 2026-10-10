@@ -1,18 +1,2 @@
-1,admin,admin123,ADMIN
-9395c,admin,admin123,USER
-110f9,admin,admin123,USER
-ac0c8,admin,admin123,USER
-2d1fa,admin,admin123,USER
-08530,admin,admin123,USER
-e09c9,admin,admin123,USER
-0712d,kasun,123,USER
-0e622,admin,admin123,USER
-0f897,admin,admin123,USER
-65e10,admin,admin123,USER
-770e2,admin,admin123,USER
-c863a,kasun,123,USER
-94498,kasun ,123,USER
-043d3,kasun,1234,USER
-c4352,admin,admin123,USER
-3c55e,admin,admin 123,USER
-a4820,kasun,kasun123,USER
+6ae4e;kasun;kasun123;ADMIN
+d7b67;nadun;nadun123;USER
