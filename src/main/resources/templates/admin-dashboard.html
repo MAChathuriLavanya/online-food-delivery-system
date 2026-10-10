@@ -6,17 +6,15 @@
 </head>
 <body class="container py-4">
 <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
-    <h2 class="text-primary fw-bold">Admin Management Panel</h2>
+    <h2 class="text-primary fw-bold">Admin Panel</h2>
     <div>
-        <a href="/menu" class="btn btn-outline-primary me-2">View Customer Menu</a>
-        <a href="/" class="btn btn-outline-danger">Logout</a>
+        <a href="/login" class="btn btn-outline-danger">Logout</a>
     </div>
 </div>
 
 <div class="row">
-    <!-- Forms Section -->
+    <!-- Left Forms Column -->
     <div class="col-md-4">
-        <!-- Add Item Form -->
         <div class="card p-3 shadow-sm mb-4">
             <h5 class="mb-3 text-success">Add New Food Item</h5>
             <form action="/admin/add-item" method="post">
@@ -26,7 +24,7 @@
                 </div>
                 <div class="mb-2">
                     <label class="form-label">Category</label>
-                    <input type="text" name="category" class="form-control" placeholder="eg: Fast Food, Beverages" required>
+                    <input type="text" name="category" class="form-control" placeholder="eg: Fast Food" required>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Price (Rs.)</label>
@@ -36,7 +34,6 @@
             </form>
         </div>
 
-        <!-- Add Admin Form -->
         <div class="card p-3 shadow-sm mb-4 border-warning">
             <h5 class="mb-3 text-warning-emphasis">Add New Admin Account</h5>
             <form action="/admin/add-admin" method="post">
@@ -53,8 +50,32 @@
         </div>
     </div>
 
-    <!-- Tables Section -->
+    <!-- Right Tables Column -->
     <div class="col-md-8">
+        <!-- Customer Orders Table -->
+        <div class="card p-3 shadow-sm mb-4 border-success">
+            <h5 class="mb-3 text-success">Placed Customer Orders</h5>
+            <table class="table table-bordered table-striped">
+                <thead class="table-success">
+                <tr>
+                    <th>Order ID</th>
+                    <th>Item Name</th>
+                    <th>Quantity</th>
+                    <th>Total Price</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="order : ${orders}">
+                    <td th:text="${order.orderId}"></td>
+                    <td th:text="${order.itemName}"></td>
+                    <td th:text="${order.quantity}"></td>
+                    <td th:text="${'Rs. ' + order.totalPrice}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Food Items Table -->
         <div class="card p-3 shadow-sm mb-4">
             <h5 class="mb-3">Available Food Items</h5>
             <table class="table table-bordered table-hover">
@@ -81,7 +102,7 @@
             </table>
         </div>
 
-        <!-- Registered Users Table -->
+        <!-- Registered System Users Table -->
         <div class="card p-3 shadow-sm">
             <h5 class="mb-3">Registered System Users</h5>
             <table class="table table-striped table-bordered">
