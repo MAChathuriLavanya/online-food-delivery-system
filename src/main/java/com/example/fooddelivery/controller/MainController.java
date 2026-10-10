@@ -1,5 +1,7 @@
 package com.example.fooddelivery.controller;
 
+import com.example.fooddelivery.model.Admin;
+import com.example.fooddelivery.model.Customer;
 import com.example.fooddelivery.model.FoodItem;
 import com.example.fooddelivery.model.Order;
 import com.example.fooddelivery.model.User;
@@ -16,7 +18,6 @@ public class MainController {
 
     private final FileStorageService fileService;
 
-    // Permanent Admin Credentials
     private final String PERMANENT_ADMIN_USER = "admin";
     private final String PERMANENT_ADMIN_PASS = "admin123";
 
@@ -58,8 +59,8 @@ public class MainController {
     @PostMapping("/register")
     public String registerUser(@RequestParam String username, @RequestParam String password) {
         String id = UUID.randomUUID().toString().substring(0, 5);
-        User newUser = new User(id, username, password, "USER");
-        fileService.saveUser(newUser);
+        Customer newCustomer = new Customer(id, username, password);
+        fileService.saveUser(newCustomer);
         return "redirect:/login";
     }
 
@@ -72,10 +73,32 @@ public class MainController {
     }
 
     @PostMapping("/admin/add-item")
-    public String addItem(@RequestParam String name, @RequestParam String category, @RequestParam double price) {
+    public String addItem(@RequestParam String name,
+                          @RequestParam String category,
+                          @RequestParam double price,
+                          @RequestParam(defaultValue = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500") String imageUrl) {
+        if (price <= 0) return "redirect:/admin?error=invalid_price";
         String id = UUID.randomUUID().toString().substring(0, 5);
-        FoodItem item = new FoodItem(id, name, category, price);
+        if (imageUrl == null || imageUrl.trim().isEmpty()) {
+            imageUrl = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500";
+        }
+        FoodItem item = new FoodItem(id, name, category, price, imageUrl);
         fileService.saveItem(item);
+        return "redirect:/admin";
+    }
+
+    @PostMapping("/admin/update-item")
+    public String updateItem(@RequestParam String id,
+                             @RequestParam String name,
+                             @RequestParam String category,
+                             @RequestParam double price,
+                             @RequestParam(defaultValue = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500") String imageUrl) {
+        if (price <= 0) return "redirect:/admin?error=invalid_price";
+        if (imageUrl == null || imageUrl.trim().isEmpty()) {
+            imageUrl = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500";
+        }
+        FoodItem item = new FoodItem(id, name, category, price, imageUrl);
+        fileService.updateItem(item);
         return "redirect:/admin";
     }
 
@@ -85,10 +108,44 @@ public class MainController {
         return "redirect:/admin";
     }
 
+    @GetMapping("/admin/delete-user/{id}")
+    public String deleteUser(@PathVariable String id) {
+        fileService.deleteUser(id);
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/admin/delete-order/{id}")
+    public String deleteOrder(@PathVariable String id) {
+        fileService.deleteOrder(id);
+        return "redirect:/admin";
+    }
+
+    @PostMapping("/admin/update-order")
+    public String updateOrder(@RequestParam String orderId,
+                              @RequestParam String customerName,
+                              @RequestParam String address,
+                              @RequestParam String phone,
+                              @RequestParam String itemName,
+                              @RequestParam double totalPrice,
+                              @RequestParam String paymentMethod) {
+
+        List<Order> orders = fileService.getAllOrders();
+        long originalTs = System.currentTimeMillis();
+        for (Order o : orders) {
+            if (o.getOrderId().equals(orderId)) {
+                originalTs = o.getTimestamp();
+                break;
+            }
+        }
+        Order updatedOrder = new Order(orderId, customerName, address, phone, itemName, totalPrice, paymentMethod, originalTs);
+        fileService.updateOrder(updatedOrder);
+        return "redirect:/admin";
+    }
+
     @PostMapping("/admin/add-admin")
     public String addAdmin(@RequestParam String username, @RequestParam String password) {
         String id = UUID.randomUUID().toString().substring(0, 5);
-        User newAdmin = new User(id, username, password, "ADMIN");
+        Admin newAdmin = new Admin(id, username, password);
         fileService.saveUser(newAdmin);
         return "redirect:/admin";
     }
@@ -97,6 +154,13 @@ public class MainController {
     public String customerMenu(Model model) {
         model.addAttribute("items", fileService.getAllItems());
         return "menu";
+    }
+
+    @GetMapping("/my-orders")
+    public String myOrders(Model model) {
+        model.addAttribute("orders", fileService.getAllOrders());
+        model.addAttribute("allItems", fileService.getAllItems()); // Customer ට Items Select කිරීමට
+        return "my-orders";
     }
 
     @PostMapping("/order/checkout")
@@ -108,10 +172,54 @@ public class MainController {
                                 @RequestParam String paymentMethod) {
 
         String orderId = UUID.randomUUID().toString().substring(0, 5);
-
-        Order newOrder = new Order(orderId, customerName, address, phone, itemName, price, paymentMethod);
+        long currentTime = System.currentTimeMillis();
+        Order newOrder = new Order(orderId, customerName, address, phone, itemName, price, paymentMethod, currentTime);
         fileService.saveOrder(newOrder);
 
-        return "redirect:/menu?ordered=true";
+        return "redirect:/my-orders";
+    }
+
+    @PostMapping("/order/customer-update")
+    public String customerUpdateOrder(@RequestParam String orderId,
+                                      @RequestParam String customerName,
+                                      @RequestParam String address,
+                                      @RequestParam String phone,
+                                      @RequestParam String paymentMethod,
+                                      @RequestParam String itemName,
+                                      @RequestParam double totalPrice) {
+        List<Order> orders = fileService.getAllOrders();
+        for (Order o : orders) {
+            if (o.getOrderId().equals(orderId)) {
+                if (System.currentTimeMillis() - o.getTimestamp() <= 300000) {
+                    o.setCustomerName(customerName);
+                    o.setAddress(address);
+                    o.setPhone(phone);
+                    o.setPaymentMethod(paymentMethod);
+                    o.setItemName(itemName);
+                    o.setTotalPrice(totalPrice);
+                    fileService.updateOrder(o);
+                } else {
+                    return "redirect:/my-orders?error=expired";
+                }
+                break;
+            }
+        }
+        return "redirect:/my-orders?updated=true";
+    }
+
+    @GetMapping("/order/delete/{id}")
+    public String deleteMyOrder(@PathVariable String id) {
+        List<Order> orders = fileService.getAllOrders();
+        for (Order o : orders) {
+            if (o.getOrderId().equals(id)) {
+                if (System.currentTimeMillis() - o.getTimestamp() <= 300000) {
+                    fileService.deleteOrder(id);
+                } else {
+                    return "redirect:/my-orders?error=expired";
+                }
+                break;
+            }
+        }
+        return "redirect:/my-orders";
     }
 }

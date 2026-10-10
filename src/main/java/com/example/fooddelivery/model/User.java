@@ -4,15 +4,18 @@ public class User {
     private String id;
     private String username;
     private String password;
-    private String role; // ADMIN or USER
-
-    public User() {}
+    private String role;
 
     public User(String id, String username, String password, String role) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.role = role;
+    }
+
+    // Polymorphic method to be overridden by subclasses
+    public String getRoleDetails() {
+        return "System User: " + username + " (" + role + ")";
     }
 
     public String getId() { return id; }
@@ -26,16 +29,4 @@ public class User {
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
-
-    public String toFileString() {
-        return id + "," + username + "," + password + "," + role;
-    }
-
-    public static User fromFileString(String line) {
-        String[] parts = line.split(",");
-        if (parts.length == 4) {
-            return new User(parts[0], parts[1], parts[2], parts[3]);
-        }
-        return null;
-    }
 }
