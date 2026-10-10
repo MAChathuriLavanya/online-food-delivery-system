@@ -1,0 +1,10 @@
+101,Chicken Burger,Fast Food,850.0
+102,Cheese Pizza,Italian,1650.0
+103,Club Sandwich,Snacks,650.0
+104,Fried Rice,Main Course,950.0
+105,Chicken Noodles,Main Course,900.0
+106,Chocolate Milkshake,Beverages,450.0
+107,Iced Coffee,Beverages,380.0
+108,Submarine Sandwich,Fast Food,1100.0
+109,French Fries,Snacks,500.0
+110,Fruit Salad with Ice Cream,Dessert,420.0
