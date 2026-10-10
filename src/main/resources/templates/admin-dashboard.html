@@ -13,7 +13,7 @@
 </div>
 
 <div class="row">
-    <!-- Left Forms Column -->
+    <!-- Forms Column -->
     <div class="col-md-4">
         <div class="card p-3 shadow-sm mb-4">
             <h5 class="mb-3 text-success">Add New Food Item</h5>
@@ -50,29 +50,41 @@
         </div>
     </div>
 
-    <!-- Right Tables Column -->
+    <!-- Tables Column -->
     <div class="col-md-8">
-        <!-- Customer Orders Table -->
+        <!-- Customer Orders with Delivery & Payment Details -->
         <div class="card p-3 shadow-sm mb-4 border-success">
-            <h5 class="mb-3 text-success">Placed Customer Orders</h5>
-            <table class="table table-bordered table-striped">
-                <thead class="table-success">
-                <tr>
-                    <th>Order ID</th>
-                    <th>Item Name</th>
-                    <th>Quantity</th>
-                    <th>Total Price</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="order : ${orders}">
-                    <td th:text="${order.orderId}"></td>
-                    <td th:text="${order.itemName}"></td>
-                    <td th:text="${order.quantity}"></td>
-                    <td th:text="${'Rs. ' + order.totalPrice}"></td>
-                </tr>
-                </tbody>
-            </table>
+            <h5 class="mb-3 text-success">Placed Customer Orders & Delivery Details</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped small">
+                    <thead class="table-success">
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer Name</th>
+                        <th>Address</th>
+                        <th>Phone</th>
+                        <th>Item</th>
+                        <th>Qty</th>
+                        <th>Total Price</th>
+                        <th>Payment</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="order : ${orders}">
+                        <td th:text="${order.orderId}"></td>
+                        <td th:text="${order.customerName}"></td>
+                        <td th:text="${order.address}"></td>
+                        <td th:text="${order.phone}"></td>
+                        <td th:text="${order.itemName}"></td>
+                        <td th:text="${order.quantity}"></td>
+                        <td th:text="${'Rs. ' + order.totalPrice}"></td>
+                        <td>
+                            <span class="badge bg-primary" th:text="${order.paymentMethod}"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <!-- Food Items Table -->
