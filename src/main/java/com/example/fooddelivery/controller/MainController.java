@@ -1,6 +1,7 @@
 package com.example.fooddelivery.controller;
 
 import com.example.fooddelivery.model.FoodItem;
+import com.example.fooddelivery.model.Order;
 import com.example.fooddelivery.model.User;
 import com.example.fooddelivery.service.FileStorageService;
 import org.springframework.stereotype.Controller;
@@ -37,12 +38,12 @@ public class MainController {
 
     @PostMapping("/login")
     public String login(@RequestParam String username, @RequestParam String password, Model model) {
-        // 1. Permanent Admin Login Check
+        // Permanent Admin Check
         if (PERMANENT_ADMIN_USER.equals(username) && PERMANENT_ADMIN_PASS.equals(password)) {
             return "redirect:/admin";
         }
 
-        // 2. Check Registered Users and Created Admins
+        // Regular Users & Added Admins Check
         List<User> users = fileService.getAllUsers();
         for (User u : users) {
             if (u.getUsername().equals(username) && u.getPassword().equals(password)) {
@@ -58,7 +59,7 @@ public class MainController {
         return "login";
     }
 
-    // Register User
+    // Register Account
     @PostMapping("/register")
     public String registerUser(@RequestParam String username, @RequestParam String password) {
         String id = UUID.randomUUID().toString().substring(0, 5);
@@ -67,11 +68,12 @@ public class MainController {
         return "redirect:/login";
     }
 
-    // Admin Dashboard (Admin Only)
+    // Admin Dashboard
     @GetMapping("/admin")
     public String adminDashboard(Model model) {
         model.addAttribute("items", fileService.getAllItems());
         model.addAttribute("users", fileService.getAllUsers());
+        model.addAttribute("orders", fileService.getAllOrders());
         return "admin-dashboard";
     }
 
@@ -89,7 +91,6 @@ public class MainController {
         return "redirect:/admin";
     }
 
-    // Create Admin Account (Admin Only)
     @PostMapping("/admin/add-admin")
     public String addAdmin(@RequestParam String username, @RequestParam String password) {
         String id = UUID.randomUUID().toString().substring(0, 5);
@@ -98,10 +99,20 @@ public class MainController {
         return "redirect:/admin";
     }
 
-    // Customer Menu View
+    // Customer Menu Page
     @GetMapping("/menu")
     public String customerMenu(Model model) {
         model.addAttribute("items", fileService.getAllItems());
         return "menu";
+    }
+
+    // Place Order Action
+    @PostMapping("/order/place")
+    public String placeOrder(@RequestParam String itemName, @RequestParam double price, @RequestParam int quantity) {
+        String orderId = UUID.randomUUID().toString().substring(0, 5);
+        double totalPrice = price * quantity;
+        Order newOrder = new Order(orderId, "Customer", itemName, quantity, totalPrice);
+        fileService.saveOrder(newOrder);
+        return "redirect:/menu?ordered=true";
     }
 }
