@@ -16,6 +16,7 @@ public class MainController {
 
     private final FileStorageService fileService;
 
+    // Permanent Admin Credentials
     private final String PERMANENT_ADMIN_USER = "admin";
     private final String PERMANENT_ADMIN_PASS = "admin123";
 
@@ -98,20 +99,17 @@ public class MainController {
         return "menu";
     }
 
-    // Place Order Routing with Delivery Details & Payment
     @PostMapping("/order/checkout")
     public String checkoutOrder(@RequestParam String itemName,
                                 @RequestParam double price,
-                                @RequestParam int quantity,
                                 @RequestParam String customerName,
                                 @RequestParam String address,
                                 @RequestParam String phone,
                                 @RequestParam String paymentMethod) {
 
         String orderId = UUID.randomUUID().toString().substring(0, 5);
-        double totalPrice = price * quantity;
 
-        Order newOrder = new Order(orderId, customerName, address, phone, itemName, quantity, totalPrice, paymentMethod);
+        Order newOrder = new Order(orderId, customerName, address, phone, itemName, price, paymentMethod);
         fileService.saveOrder(newOrder);
 
         return "redirect:/menu?ordered=true";

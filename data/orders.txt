@@ -1,3 +1,0 @@
-22cf4,Customer,Chicken Burger,1,850.0
-64597,Customer,Cheese Pizza,1,1650.0
-80abb,Nadun dilshan,mahakubukgollewa,poonew,madawchchiya,0774541816,Chicken Burger,4,3400.0,Cash on Delivery
