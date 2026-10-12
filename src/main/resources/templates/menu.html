@@ -1,199 +1,254 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Menu - Food Express</title>
+    <meta charset="UTF-8">
+    <title>Food Express - Menu</title>
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        body { background-color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .navbar-custom { background: #ffffff; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .food-card { border: none; border-radius: 16px; transition: all 0.3s ease; background: #ffffff; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-        .food-card:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(0,0,0,0.08); }
-        .price-tag { color: #22c55e; font-size: 1.25rem; font-weight: 700; }
-        .badge-cat { background: #f1f5f9; color: #475569; font-weight: 600; padding: 6px 12px; border-radius: 20px; }
-        .cart-bar { background: #0f172a; border-radius: 16px 16px 0 0; box-shadow: 0 -10px 25px rgba(0,0,0,0.15); }
+        body { background-color: #f8f9fa; padding-bottom: 120px; }
+        .food-card { transition: transform 0.2s; border: none; box-shadow: 0 4px 8px rgba(0,0,0,0.05); border-radius: 12px; overflow: hidden; background: #ffffff; }
+        .food-card:hover { transform: translateY(-3px); }
+        .food-img { height: 160px; object-fit: cover; }
+
+        /* Floating Dark Cart Bar */
+        .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #0b1329; color: white; padding: 18px 40px; box-shadow: 0 -4px 15px rgba(0,0,0,0.3); z-index: 1000; }
+
+        /* Category Buttons Styling */
+        .category-btn { border-radius: 20px; padding: 6px 20px; font-weight: 500; border: 1px solid #d1d5db; color: #4b5563; background-color: #ffffff; margin-right: 8px; transition: all 0.2s ease; }
+        .category-btn.active { background-color: #0f766e !important; color: #ffffff !important; border-color: #0f766e !important; }
+        .category-btn:hover { background-color: #f3f4f6; }
+
+        /* Quantity Box Styling */
+        .qty-box { background-color: #f8f9fa; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px; }
     </style>
 </head>
-<body class="pb-5">
+<body>
 
-<nav class="navbar navbar-expand-lg navbar-custom sticky-top py-3 mb-4">
-    <div class="container">
-        <a class="navbar-brand fw-bold text-success fs-4" href="#">
-            <i class="fas fa-utensils me-2"></i>Food Express
-        </a>
-        <div class="d-flex align-items-center">
-            <a th:href="@{/login}" class="btn btn-outline-danger btn-sm rounded-pill px-3 fw-bold">
-                <i class="fas fa-sign-out-alt me-1"></i>Logout
-            </a>
+<div class="container my-4">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-success d-flex align-items-center gap-2">🍴 Food Express</h2>
+        <div>
+            <a href="/my-orders" class="btn btn-outline-success me-2 fw-semibold">📋 My Orders</a>
+            <a href="/login" class="btn btn-outline-danger me-1">Logout</a>
         </div>
     </div>
-</nav>
 
-<div class="container mb-5">
-    <div th:if="${param.ordered}" class="alert alert-success alert-dismissible fade show border-0 shadow-sm rounded-4 mb-4" role="alert">
-        <i class="fas fa-check-circle me-2"></i><strong>Order Confirmed!</strong> Your food order has been placed successfully.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <!-- DYNAMIC CATEGORIES FILTER BAR -->
+    <div class="card p-3 mb-4 border-0 shadow-sm rounded-4">
+        <div class="d-flex align-items-center flex-wrap gap-2" id="categoryFilterContainer">
+            <span class="fw-bold text-secondary me-2">🌪️ Categories:</span>
+            <button type="button" class="category-btn active" onclick="filterCategory('ALL', this)">All Items</button>
+        </div>
     </div>
 
-    <form th:action="@{/order/checkout}" method="post" id="orderForm">
-        <div class="row g-4 mb-5">
-            <div class="col-md-4" th:each="item, iter : ${items}">
-                <div class="card food-card h-100 shadow-sm">
-                    <!-- Image එක පෙන්වන කොටස -->
-                    <img th:src="${item.imageUrl}" class="card-img-top" style="height: 180px; object-fit: cover;" alt="Food Image"
-                         onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500'">
+    <!-- Menu Grid -->
+    <div class="row g-4" id="foodItemContainer">
+        <div class="col-md-3 food-item-col" th:each="item : ${items}" th:data-category="${item.category}">
+            <div class="card food-card h-100">
+                <img th:src="${item.imageUrl != null && !item.imageUrl.empty ? item.imageUrl : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500'}"
+                     onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500';"
+                     class="card-img-top food-img" alt="Food Image">
 
-                    <div class="card-body d-flex flex-column justify-content-between p-3">
-                        <div>
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="badge badge-cat" th:text="${item.category}">Category</span>
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input item-select fs-5" type="checkbox"
-                                           th:data-price="${item.price}"
-                                           th:data-name="${item.name}"
-                                           th:id="${'chk-' + iter.index}"
-                                           onchange="calculateTotal()">
-                                </div>
-                            </div>
-                            <h5 class="fw-bold text-dark mb-1" th:text="${item.name}">Item Name</h5>
-                            <div class="price-tag mb-3" th:text="${'Rs. ' + item.price}">Rs. 0.00</div>
-                        </div>
-
-                        <div class="bg-light p-2 rounded-3">
-                            <label class="form-label text-muted small mb-1 fw-semibold">Quantity</label>
-                            <input type="number" class="form-control form-control-sm border-0 bg-white item-qty"
-                                   value="1" min="1"
-                                   th:id="${'qty-' + iter.index}"
-                                   onchange="calculateTotal()" oninput="calculateTotal()">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Floating Cart Bar -->
-        <div class="fixed-bottom cart-bar text-white p-3">
-            <div class="container d-flex justify-content-between align-items-center">
-                <div>
-                    <span class="text-light">Selected Items: <strong id="selectedCount" class="text-warning fs-5 ms-1">0</strong></span>
-                    <span class="ms-4 text-light">Total Amount: <strong id="grandTotal" class="text-success fs-4 ms-1">Rs. 0.00</strong></span>
-                </div>
-                <button type="button" class="btn btn-success btn-lg rounded-3 fw-bold px-4" onclick="prepareCheckout()" data-bs-toggle="modal" data-bs-target="#checkoutModal">
-                    <i class="fas fa-shopping-bag me-2"></i>Proceed to Order
-                </button>
-            </div>
-        </div>
-
-        <input type="hidden" name="itemName" id="finalItemDetails">
-        <input type="hidden" name="price" id="finalPrice" value="0">
-
-        <!-- Checkout Modal -->
-        <div class="modal fade text-dark" id="checkoutModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content border-0 rounded-4 shadow">
-                    <div class="modal-header bg-success text-white border-0 py-3">
-                        <h5 class="modal-title fw-bold"><i class="fas fa-truck me-2"></i>Delivery & Payment Details</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body p-4">
-                        <div class="card p-3 bg-light border-0 rounded-3 mb-3">
-                            <h6 class="fw-bold text-success mb-2">Selected Items:</h6>
-                            <div id="modalOrderSummary" class="small text-muted mb-2">No items selected</div>
-                            <div class="d-flex justify-content-between border-top pt-2 fw-bold">
-                                <span>Total Price:</span>
-                                <span id="modalGrandTotal" class="text-success fs-5">Rs. 0.00</span>
+                <div class="card-body d-flex flex-column justify-content-between p-3">
+                    <div>
+                        <!-- Badge & Toggle Switch Row -->
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-light text-dark border" th:text="${item.category}">Fast Food</span>
+                            <div class="form-check form-switch m-0">
+                                <input class="form-check-input item-switch" type="checkbox" role="switch"
+                                       th:id="'switch-' + ${item.id}"
+                                       onchange="toggleItemSelection(this)">
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label small fw-bold text-secondary">Full Name</label>
-                            <input type="text" name="customerName" class="form-control rounded-3" placeholder="Enter full name" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label small fw-bold text-secondary">Delivery Address</label>
-                            <textarea name="address" class="form-control rounded-3" rows="2" placeholder="Enter delivery address" required></textarea>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label small fw-bold text-secondary">Phone Number</label>
-                            <input type="tel" name="phone" class="form-control rounded-3" placeholder="07XXXXXXXX" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label small fw-bold text-secondary">Payment Method</label>
-                            <select name="paymentMethod" class="form-select rounded-3" required>
-                                <option value="Cash on Delivery">Cash on Delivery</option>
-                                <option value="Credit / Debit Card">Credit / Debit Card</option>
-                            </select>
-                        </div>
+                        <h5 class="card-title fw-bold fs-6 mb-1 item-name-title" th:text="${item.name}">Chicken Burger</h5>
+                        <p class="card-text text-success fw-bold mb-3" th:text="'Rs. ' + ${#numbers.formatDecimal(item.price, 1, 1)}">Rs. 850.0</p>
                     </div>
-                    <div class="modal-footer border-0 p-4 pt-0">
-                        <button type="button" class="btn btn-light rounded-3" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-success rounded-3 px-4 fw-bold">Confirm Order</button>
+
+                    <!-- Quantity Box -->
+                    <div class="qty-box">
+                        <label class="form-label small text-muted mb-1">Quantity</label>
+                        <input type="number" min="1" value="1" class="form-control item-qty border-0 bg-white"
+                               th:data-id="${item.id}"
+                               th:data-name="${item.name}"
+                               th:data-price="${item.price}"
+                               onchange="updateCart()">
                     </div>
                 </div>
             </div>
         </div>
-    </form>
+    </div>
 </div>
 
-<script>
-    function calculateTotal() {
-        let checkboxes = document.querySelectorAll('.item-select');
-        let quantities = document.querySelectorAll('.item-qty');
-        let grandTotal = 0;
-        let count = 0;
+<!-- Bottom Fixed Dark Cart Bar -->
+<div class="cart-bar d-flex justify-content-between align-items-center">
+    <div class="fs-5">
+        Selected Items: <span id="cartCount" class="fw-bold text-warning">0</span> &nbsp;&nbsp;|&nbsp;&nbsp;
+        Total Amount: <span id="cartTotal" class="fw-bold text-success fs-4">Rs. 0.00</span>
+    </div>
+    <button class="btn btn-success btn-lg px-4 fw-bold rounded-3" onclick="openCheckoutModal()" id="checkoutBtn" disabled>
+        🛍️ Proceed to Order
+    </button>
+</div>
 
-        checkboxes.forEach((chk, index) => {
-            if (chk.checked) {
-                let price = parseFloat(chk.getAttribute('data-price'));
-                let qty = parseInt(quantities[index].value) || 1;
-                grandTotal += (price * qty);
-                count++;
+<!-- CHECKOUT MODAL FORM -->
+<div class="modal fade" id="checkoutModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fw-bold">🛒 Checkout Order</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Controller mapping /order/checkout -->
+            <form action="/order/checkout" method="POST" id="checkoutForm">
+                <div class="modal-body p-4">
+
+                    <div id="modalOrderSummary" class="mb-3 p-3 bg-light rounded-3 border">
+                        <!-- Dynamic Order Summary -->
+                    </div>
+
+                    <!-- Hidden Inputs for MainController @RequestParam -->
+                    <input type="hidden" name="itemName" id="hiddenItemName" required>
+                    <input type="hidden" name="price" id="hiddenTotalPrice" required>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Full Name</label>
+                        <input type="text" name="customerName" class="form-control" placeholder="Nadun dilshan" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Delivery Address</label>
+                        <textarea name="address" class="form-control" rows="2" required>mahakubukgollewa,poonew,madawchchiya</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Phone Number</label>
+                        <input type="tel" name="phone" class="form-control" value="0774541816" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Payment Method</label>
+                        <select name="paymentMethod" class="form-select" required>
+                            <option value="Cash on Delivery" selected>Cash on Delivery</option>
+                            <option value="Credit/Debit Card">Credit/Debit Card</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success px-4 fw-bold">Confirm Order</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    let selectedCartItems = [];
+    let currentCategory = 'ALL';
+
+    function generateCategoryButtons() {
+        const cards = document.querySelectorAll('.food-item-col');
+        const categoriesSet = new Set();
+
+        cards.forEach(card => {
+            const cat = card.getAttribute('data-category');
+            if (cat && cat.trim() !== '') {
+                categoriesSet.add(cat.trim());
             }
         });
 
-        document.getElementById('selectedCount').innerText = count;
-        document.getElementById('grandTotal').innerText = 'Rs. ' + grandTotal.toFixed(2);
+        const container = document.getElementById('categoryFilterContainer');
+        categoriesSet.forEach(category => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'category-btn';
+            btn.textContent = category;
+            btn.onclick = function() { filterCategory(category, this); };
+            container.appendChild(btn);
+        });
     }
 
-    function prepareCheckout() {
-        let checkboxes = document.querySelectorAll('.item-select');
-        let quantities = document.querySelectorAll('.item-qty');
-        let summaryHtml = '';
-        let itemDetailsText = '';
-        let grandTotal = 0;
-        let count = 0;
+    document.addEventListener("DOMContentLoaded", generateCategoryButtons);
 
-        checkboxes.forEach((chk, index) => {
-            if (chk.checked) {
-                let name = chk.getAttribute('data-name');
-                let price = parseFloat(chk.getAttribute('data-price'));
-                let qty = parseInt(quantities[index].value) || 1;
-                let itemTotal = price * qty;
-                grandTotal += itemTotal;
-                count++;
+    function filterCategory(category, element) {
+        currentCategory = category;
 
-                summaryHtml += `<div class="d-flex justify-content-between mb-1">
-                        <span>${name} (x${qty})</span>
-                        <span class="fw-bold">Rs. ${itemTotal.toFixed(2)}</span>
-                    </div>`;
+        let buttons = document.querySelectorAll('.category-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        element.classList.add('active');
 
-                itemDetailsText += `${name} (x${qty}) `;
+        let cards = document.querySelectorAll('.food-item-col');
+        cards.forEach(card => {
+            let itemCategory = card.getAttribute('data-category') || '';
+            if (currentCategory === 'ALL' || itemCategory.toLowerCase() === currentCategory.toLowerCase()) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    function toggleItemSelection(switchElem) {
+        updateCart();
+    }
+
+    function updateCart() {
+        selectedCartItems = [];
+        let totalCount = 0;
+        let totalPrice = 0;
+
+        const cards = document.querySelectorAll('.food-card');
+        cards.forEach(card => {
+            const switchElem = card.querySelector('.item-switch');
+            const qtyInput = card.querySelector('.item-qty');
+
+            if (switchElem && switchElem.checked) {
+                const qty = parseInt(qtyInput.value) || 1;
+                const name = qtyInput.getAttribute('data-name');
+                const price = parseFloat(qtyInput.getAttribute('data-price'));
+
+                selectedCartItems.push({ name, price, qty });
+                totalCount += qty;
+                totalPrice += price * qty;
             }
         });
 
-        if (count === 0) {
-            alert('Please select at least one item before placing an order!');
-            return false;
-        }
+        document.getElementById('cartCount').textContent = totalCount;
+        document.getElementById('cartTotal').textContent = 'Rs. ' + totalPrice.toFixed(2);
+        document.getElementById('checkoutBtn').disabled = totalCount === 0;
+    }
+
+    function openCheckoutModal() {
+        if (selectedCartItems.length === 0) return;
+
+        let summaryHtml = '<h6 class="fw-bold mb-2">Order Summary:</h6><ul class="list-unstyled mb-0">';
+        let itemNamesStr = [];
+        let grandTotal = 0;
+
+        selectedCartItems.forEach(item => {
+            const itemTotal = item.price * item.qty;
+            grandTotal += itemTotal;
+            itemNamesStr.push(`${item.name} (x${item.qty})`);
+            summaryHtml += `<li class="d-flex justify-content-between mb-1"><span>${item.name} (x${item.qty})</span><span>Rs. ${itemTotal.toFixed(2)}</span></li>`;
+        });
+
+        summaryHtml += `</ul><hr><div class="d-flex justify-content-between fw-bold text-success fs-5"><span>Total Price:</span><span>Rs. ${grandTotal.toFixed(2)}</span></div>`;
 
         document.getElementById('modalOrderSummary').innerHTML = summaryHtml;
-        document.getElementById('modalGrandTotal').innerText = 'Rs. ' + grandTotal.toFixed(2);
-        document.getElementById('finalItemDetails').value = itemDetailsText;
-        document.getElementById('finalPrice').value = grandTotal;
+
+        // Assign hidden input values
+        document.getElementById('hiddenItemName').value = itemNamesStr.join(', ');
+        document.getElementById('hiddenTotalPrice').value = grandTotal;
+
+        const modal = new bootstrap.Modal(document.getElementById('checkoutModal'));
+        modal.show();
     }
 </script>
 </body>

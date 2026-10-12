@@ -1,2 +1,1 @@
-f2f0c;Nadun dilshan;mahakubukgollewa,poonew,madawchchiya;0774541816;Chicken Burger (x1) Fried Rice (x1) Chicken Noodles (x1) Chocolate Milkshake (x1) Iced Coffee (x1);3530.0;Cash on Delivery;1791629591487
-4e7d1;Nadun dilshan;mahakubukgollewa,poonew,madawchchiya;0774541816;Chicken Burger (x1) Cheese Pizza (x1) Club Sandwich (x1) Chicken Noodles (x1);4050.0;Cash on Delivery;1791630062588
+4ad4b;Nadun dilshan;mahakubukgollewa,poonew,madawchchiya;0774541816;Chicken Burger (x1), Cheese Burger (x1), Submarine Sandwich (x1), Chicken Wrap (x1), Chicken Nuggets (x1);4180.0;Cash on Delivery;1791637079965

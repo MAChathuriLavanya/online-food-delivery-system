@@ -1,77 +1,76 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Admin Dashboard - Food Express</title>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard - Online Food Delivery</title>
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        body { background-color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .card-custom { border: none; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); background: #ffffff; }
-        .table-custom th { background-color: #f1f5f9; color: #334155; font-weight: 600; }
+        body { background-color: #f8f9fa; }
+        .nav-pills .nav-link.active {
+            background-color: #198754 !important; /* Green Accent */
+        }
+        .admin-card {
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            padding: 25px;
+        }
+        .food-img {
+            width: 45px;
+            height: 45px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+        }
     </style>
 </head>
-<body class="py-4">
-<div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+<body>
+
+<div class="container my-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h3 class="fw-bold text-dark mb-0"><i class="fas fa-chart-line text-primary me-2"></i>Admin Dashboard</h3>
-            <span class="text-muted small">Manage food items, orders, and system users</span>
+            <h2 class="fw-bold text-success">📈 Admin Dashboard</h2>
+            <p class="text-muted m-0">Manage food items, orders, and system users efficiently.</p>
         </div>
-        <a href="/login" class="btn btn-outline-danger btn-sm rounded-pill px-3 fw-bold">
-            <i class="fas fa-sign-out-alt me-1"></i>Logout
-        </a>
+        <a href="/login" class="btn btn-outline-danger">Logout</a>
     </div>
 
-    <div class="row g-4">
-        <div class="col-lg-4">
-            <div class="card card-custom p-4 mb-4">
-                <h5 class="fw-bold text-success mb-3"><i class="fas fa-plus-circle me-2"></i>Add Food Item</h5>
-                <form action="/admin/add-item" method="post">
-                    <div class="mb-3">
-                        <label class="form-label small fw-semibold">Item Name</label>
-                        <input type="text" name="name" class="form-control rounded-3" placeholder="eg: Burger" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label small fw-semibold">Category</label>
-                        <input type="text" name="category" class="form-control rounded-3" placeholder="eg: Fast Food" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label small fw-semibold">Price (Rs.)</label>
-                        <input type="number" step="0.01" min="1" name="price" class="form-control rounded-3" placeholder="eg: 450.00" required>
-                    </div>
-                    <!-- Image URL input field එක මෙතැන ඇත -->
-                    <div class="mb-3">
-                        <label class="form-label small fw-semibold">Image URL</label>
-                        <input type="url" name="imageUrl" class="form-control rounded-3" placeholder="https://example.com/image.jpg">
-                    </div>
-                    <button type="submit" class="btn btn-success w-100 rounded-3 fw-bold">Add Item</button>
-                </form>
-            </div>
+    <!-- MAIN NAVIGATION TABS -->
+    <ul class="nav nav-pills nav-fill mb-4 p-2 bg-white rounded shadow-sm" id="adminTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link fw-bold" id="orders-tab" data-bs-toggle="tab" data-bs-target="#orders-section" type="button" role="tab">
+                🛒 Customer Orders
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active fw-bold" id="menu-tab" data-bs-toggle="tab" data-bs-target="#menu-section" type="button" role="tab">
+                🍔 Menu Items
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link fw-bold" id="add-food-tab" data-bs-toggle="tab" data-bs-target="#add-food-section" type="button" role="tab">
+                ➕ Add Food Item
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link fw-bold" id="users-tab" data-bs-toggle="tab" data-bs-target="#users-section" type="button" role="tab">
+                👥 Registered System Users
+            </button>
+        </li>
+    </ul>
 
-            <div class="card card-custom p-4">
-                <h5 class="fw-bold text-warning mb-3"><i class="fas fa-user-shield me-2"></i>Add Admin Account</h5>
-                <form action="/admin/add-admin" method="post">
-                    <div class="mb-3">
-                        <label class="form-label small fw-semibold">Username</label>
-                        <input type="text" name="username" class="form-control rounded-3" placeholder="Enter username" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label small fw-semibold">Password</label>
-                        <input type="password" name="password" class="form-control rounded-3" placeholder="Enter password" required>
-                    </div>
-                    <button type="submit" class="btn btn-warning w-100 rounded-3 fw-bold text-white">Create Admin Account</button>
-                </form>
-            </div>
-        </div>
+    <!-- TAB CONTENTS -->
+    <div class="tab-content" id="adminTabsContent">
 
-        <div class="col-lg-8">
-            <!-- Orders Table -->
-            <div class="card card-custom p-4 mb-4">
-                <h5 class="fw-bold text-dark mb-3"><i class="fas fa-shopping-cart text-success me-2"></i>Customer Orders</h5>
+        <!-- 1. CUSTOMER ORDERS SECTION -->
+        <div class="tab-pane fade" id="orders-section" role="tabpanel">
+            <div class="admin-card">
+                <h4 class="fw-bold text-success mb-3">🛒 Customer Orders</h4>
                 <div class="table-responsive">
-                    <table class="table table-hover table-custom align-middle small">
-                        <thead>
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
                         <tr>
                             <th>ID</th>
                             <th>Customer</th>
@@ -79,34 +78,43 @@
                             <th>Phone</th>
                             <th>Items</th>
                             <th>Total</th>
+                            <th>Payment</th>
                             <th>Action</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="order : ${orders}">
-                            <td th:text="${order.orderId}" class="fw-bold"></td>
-                            <td th:text="${order.customerName}"></td>
-                            <td th:text="${order.address}"></td>
-                            <td th:text="${order.phone}"></td>
-                            <td th:text="${order.itemName}" class="fw-semibold"></td>
-                            <td th:text="${'Rs. ' + order.totalPrice}" class="fw-bold text-success"></td>
+                            <td th:text="${order.orderId}">101</td>
+                            <td th:text="${order.customerName}">Kasun Perera</td>
+                            <td th:text="${order.address}">Colombo 07</td>
+                            <td th:text="${order.phone}">0771234567</td>
+                            <td th:text="${order.itemName}">Chicken Burger</td>
+                            <td th:text="'Rs. ' + ${#numbers.formatDecimal(order.totalPrice, 1, 2)}">Rs. 1100.00</td>
                             <td>
-                                <a th:href="@{'/admin/delete-order/' + ${order.orderId}}" class="btn btn-outline-danger btn-sm rounded-circle" onclick="return confirm('Delete this order?')">
-                                    <i class="fas fa-trash"></i>
-                                </a>
+                                <span class="badge bg-secondary" th:text="${order.paymentMethod}">COD</span>
                             </td>
+                            <td>
+                                <a th:href="@{/admin/delete-order/{id}(id=${order.orderId})}"
+                                   class="btn btn-sm btn-outline-danger"
+                                   onclick="return confirm('Delete this order?');">🗑️ Delete</a>
+                            </td>
+                        </tr>
+                        <tr th:if="${orders == null || orders.empty}">
+                            <td colspan="8" class="text-center text-muted">No pending customer orders found.</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+        </div>
 
-            <!-- Food Items Table -->
-            <div class="card card-custom p-4 mb-4">
-                <h5 class="fw-bold text-dark mb-3"><i class="fas fa-hamburger text-primary me-2"></i>Menu Items</h5>
+        <!-- 2. MENU ITEMS SECTION (LOADS ALL 50 ITEMS USING ${items}) -->
+        <div class="tab-pane fade show active" id="menu-section" role="tabpanel">
+            <div class="admin-card">
+                <h4 class="fw-bold text-success mb-3">🍔 Menu Items</h4>
                 <div class="table-responsive">
-                    <table class="table table-hover table-custom align-middle small">
-                        <thead>
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
                         <tr>
                             <th>ID</th>
                             <th>Image</th>
@@ -117,102 +125,106 @@
                         </tr>
                         </thead>
                         <tbody>
+                        <!-- Thymeleaf Loop with ${items} matching Controller -->
                         <tr th:each="item : ${items}">
-                            <td th:text="${item.id}"></td>
+                            <td th:text="${item.id}">101</td>
                             <td>
-                                <img th:src="${item.imageUrl}" style="width: 45px; height: 45px; object-fit: cover;" class="rounded-3" alt="item"
-                                     onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500'">
+                                <!-- Dynamic Image Rendering with Fallback -->
+                                <img th:src="${item.imageUrl != null && !item.imageUrl.empty ? item.imageUrl : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500'}"
+                                     onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500';"
+                                     alt="Food Image" class="food-img">
                             </td>
-                            <td th:text="${item.name}" class="fw-semibold"></td>
-                            <td><span class="badge bg-light text-dark border" th:text="${item.category}"></span></td>
-                            <td th:text="${'Rs. ' + item.price}"></td>
+                            <td th:text="${item.name}">Chicken Burger</td>
                             <td>
-                                <button class="btn btn-outline-primary btn-sm rounded-circle me-1"
-                                        data-bs-toggle="modal"
-                                        th:data-bs-target="${'#editModal-' + item.id}">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <a th:href="@{'/admin/delete-item/' + ${item.id}}" class="btn btn-outline-danger btn-sm rounded-circle" onclick="return confirm('Delete this item?')">
-                                    <i class="fas fa-trash"></i>
-                                </a>
-
-                                <!-- Edit Modal -->
-                                <div class="modal fade" th:id="${'editModal-' + item.id}" tabindex="-1">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <form action="/admin/update-item" method="post">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title fw-bold">Edit Food Item</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <input type="hidden" name="id" th:value="${item.id}">
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Item Name</label>
-                                                        <input type="text" name="name" class="form-control" th:value="${item.name}" required>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Category</label>
-                                                        <input type="text" name="category" class="form-control" th:value="${item.category}" required>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Price (Rs.)</label>
-                                                        <input type="number" step="0.01" min="1" name="price" class="form-control" th:value="${item.price}" required>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Image URL</label>
-                                                        <input type="url" name="imageUrl" class="form-control" th:value="${item.imageUrl}">
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-                                                    <button type="submit" class="btn btn-primary fw-bold">Save Changes</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
+                                <span class="badge bg-light text-dark border" th:text="${item.category}">Fast Food</span>
                             </td>
+                            <td th:text="'Rs. ' + ${#numbers.formatDecimal(item.price, 1, 2)}">Rs. 850.00</td>
+                            <td>
+                                <a th:href="@{/admin/delete-item/{id}(id=${item.id})}" class="btn btn-sm btn-outline-danger"
+                                   onclick="return confirm('Are you sure you want to delete this item?');">🗑️ Delete</a>
+                            </td>
+                        </tr>
+                        <tr th:if="${items == null || items.empty}">
+                            <td colspan="6" class="text-center text-muted">No menu items found. Please add items.</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+        </div>
 
-            <!-- Users Table -->
-            <div class="card card-custom p-4">
-                <h5 class="fw-bold text-dark mb-3"><i class="fas fa-users text-info me-2"></i>Registered System Users</h5>
+        <!-- 3. ADD FOOD ITEM SECTION -->
+        <div class="tab-pane fade" id="add-food-section" role="tabpanel">
+            <div class="admin-card col-md-8 mx-auto">
+                <h4 class="fw-bold text-success mb-3">➕ Add New Food Item</h4>
+                <form th:action="@{/admin/add-item}" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Item Name</label>
+                        <input type="text" name="name" class="form-control" placeholder="eg: Burger" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Category</label>
+                        <select name="category" class="form-select" required>
+                            <option value="" disabled selected>-- Select Category --</option>
+                            <option value="Fast Food">Fast Food</option>
+                            <option value="Beverages">Beverages</option>
+                            <option value="Desserts">Desserts</option>
+                            <option value="Snacks">Snacks</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Price (Rs.)</label>
+                        <input type="number" step="0.01" name="price" class="form-control" placeholder="eg: 450.00" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Image URL</label>
+                        <input type="url" name="imageUrl" class="form-control" placeholder="https://example.com/image.jpg">
+                    </div>
+                    <button type="submit" class="btn btn-success w-100 fw-bold">Add Item</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 4. REGISTERED SYSTEM USERS SECTION -->
+        <div class="tab-pane fade" id="users-section" role="tabpanel">
+            <div class="admin-card">
+                <h4 class="fw-bold text-success mb-3">👥 Registered System Users</h4>
                 <div class="table-responsive">
-                    <table class="table table-hover table-custom align-middle small">
-                        <thead>
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
                         <tr>
                             <th>ID</th>
                             <th>Username</th>
-                            <th>Role / Details</th>
+                            <th>Role</th>
                             <th>Action</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="user : ${users}">
-                            <td th:text="${user.id}"></td>
-                            <td th:text="${user.username}" class="fw-semibold"></td>
+                            <td th:text="${user.id}">6ae4e</td>
+                            <td><strong th:text="${user.username}">kasun</strong></td>
                             <td>
-                                <span th:class="${user.role == 'ADMIN' ? 'badge bg-danger rounded-pill me-2' : 'badge bg-info text-white rounded-pill me-2'}" th:text="${user.role}"></span>
-                                <small class="text-muted" th:text="${user.getRoleDetails()}"></small>
+                                <span class="badge bg-danger me-2" th:if="${user.role == 'ADMIN'}" th:text="${user.role}">ADMIN</span>
+                                <span class="badge bg-info text-dark me-2" th:if="${user.role != 'ADMIN'}" th:text="${user.role}">USER</span>
                             </td>
                             <td>
-                                <a th:href="@{'/admin/delete-user/' + ${user.id}}" class="btn btn-outline-danger btn-sm rounded-circle" onclick="return confirm('Delete this user?')">
-                                    <i class="fas fa-trash"></i>
-                                </a>
+                                <a th:href="@{/admin/delete-user/{id}(id=${user.id})}" class="btn btn-sm btn-outline-danger"
+                                   onclick="return confirm('Are you sure you want to delete this user?');">🗑️ Delete</a>
                             </td>
+                        </tr>
+                        <tr th:if="${users == null || users.empty}">
+                            <td colspan="4" class="text-center text-muted">No system users found.</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-
         </div>
+
     </div>
 </div>
+
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
