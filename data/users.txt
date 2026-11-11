@@ -1,2 +1,1 @@
-6ae4e;kasun;kasun123;ADMIN
-d7b67;nadun;nadun123;USER
+46bf3;amila;amila123;USER

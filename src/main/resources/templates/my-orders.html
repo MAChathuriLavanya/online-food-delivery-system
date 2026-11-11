@@ -1,150 +1,71 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>My Orders - Food Express</title>
+    <meta charset="UTF-8">
+    <title>My Orders - Online Food Delivery System</title>
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body { background-color: #f8f9fa; }
+        .order-card { background: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .qty-input { width: 75px; text-align: center; }
+    </style>
 </head>
-<body class="bg-light py-4">
-<div class="container">
+<body>
+
+<div class="container my-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3 class="fw-bold text-dark"><i class="fas fa-receipt text-success me-2"></i>My Placed Orders</h3>
+        <h2>My Placed Orders</h2>
         <div>
-            <a href="/menu" class="btn btn-outline-success rounded-pill me-2 fw-bold">Back to Menu</a>
-            <a href="/login" class="btn btn-outline-danger rounded-pill fw-bold">Logout</a>
+            <a href="/menu" class="btn btn-outline-success me-2">Go to Menu</a>
+            <a href="/login" class="btn btn-outline-danger">Logout</a>
         </div>
     </div>
 
-    <div th:if="${param.error}" class="alert alert-danger rounded-3" role="alert">
-        The 5-minute time window to edit or cancel this order has expired!
+    <!-- Error Alert Message -->
+    <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Error:</strong> Order modification/cancellation period (5 minutes) has expired!
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 
-    <div class="card border-0 shadow-sm rounded-4 p-4">
+    <!-- Orders Table -->
+    <div class="card order-card p-4 mb-4">
         <div class="table-responsive">
             <table class="table table-hover align-middle">
                 <thead class="table-light">
                 <tr>
                     <th>Order ID</th>
                     <th>Items</th>
-                    <th>Name</th>
-                    <th>Address</th>
-                    <th>Phone</th>
                     <th>Total Price</th>
-                    <th>Remaining Time (5 Min)</th>
+                    <th>Status / Time Left</th>
                     <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="order, stat : ${orders}">
-                    <td th:text="${order.orderId}" class="fw-bold text-primary"></td>
-                    <td th:text="${order.itemName}" class="fw-semibold"></td>
-                    <td th:text="${order.customerName}"></td>
-                    <td th:text="${order.address}"></td>
-                    <td th:text="${order.phone}"></td>
-                    <td th:text="${'Rs. ' + order.totalPrice}" class="fw-bold text-success"></td>
+                <tr th:each="order : ${orders}" th:id="'order-row-' + ${order.orderId}">
+                    <td th:text="${'#' + order.orderId}">#101</td>
+                    <td th:text="${order.itemName}">Chicken Curry Rice</td>
+                    <td th:text="'Rs. ' + ${#numbers.formatDecimal(order.totalPrice, 1, 2)}">Rs. 1300.00</td>
                     <td>
-                                <span class="badge bg-warning text-dark countdown-timer"
-                                      th:id="${'timer-' + stat.index}"
-                                      th:data-timestamp="${order.timestamp}">
-                                    Calculating...
-                                </span>
+                            <span th:id="'status-badge-' + ${order.orderId}" class="badge bg-warning text-dark fs-6" th:data-timestamp="${order.timestamp}">
+                                Editable (<span th:id="'timer-' + ${order.orderId}">05:00</span>)
+                            </span>
                     </td>
                     <td>
-                        <div th:id="${'actions-' + stat.index}">
-                            <button class="btn btn-sm btn-outline-primary rounded-pill me-1 fw-bold"
-                                    data-bs-toggle="modal"
-                                    th:data-bs-target="${'#editModal-' + order.orderId}"
-                                    th:data-orderid="${order.orderId}"
-                                    th:data-existing="${order.itemName}"
-                                    onclick="initModalItems(this.getAttribute('data-orderid'), this.getAttribute('data-existing'))">
-                                <i class="fas fa-edit me-1"></i>Edit
-                            </button>
-
-                            <a th:href="@{'/order/delete/' + ${order.orderId}}"
-                               class="btn btn-sm btn-outline-danger rounded-pill fw-bold"
-                               onclick="return confirm('Do you really want to cancel this order?')">
-                                <i class="fas fa-times me-1"></i>Cancel
-                            </a>
-                        </div>
-
-                        <!-- Edit Order Modal -->
-                        <div class="modal fade" th:id="${'editModal-' + order.orderId}" tabindex="-1">
-                            <div class="modal-dialog modal-dialog-centered modal-lg">
-                                <div class="modal-content">
-                                    <form action="/order/customer-update" method="post" onsubmit="return validateEditForm(this)">
-                                        <div class="modal-header bg-success text-white">
-                                            <h5 class="modal-title fw-bold">Edit Order Details</h5>
-                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                        </div>
-                                        <div class="modal-body text-start">
-                                            <input type="hidden" name="orderId" th:value="${order.orderId}">
-
-                                            <div class="row">
-                                                <div class="col-md-6 mb-3">
-                                                    <label class="form-label small fw-bold">Name</label>
-                                                    <input type="text" name="customerName" class="form-control" th:value="${order.customerName}" required>
-                                                </div>
-                                                <div class="col-md-6 mb-3">
-                                                    <label class="form-label small fw-bold">Phone</label>
-                                                    <input type="text" name="phone" class="form-control" th:value="${order.phone}" required>
-                                                </div>
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label small fw-bold">Address</label>
-                                                <input type="text" name="address" class="form-control" th:value="${order.address}" required>
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label small fw-bold">Payment Method</label>
-                                                <select name="paymentMethod" class="form-select" required>
-                                                    <option value="Cash on Delivery" th:selected="${order.paymentMethod == 'Cash on Delivery'}">Cash on Delivery</option>
-                                                    <option value="Credit / Debit Card" th:selected="${order.paymentMethod == 'Credit / Debit Card'}">Credit / Debit Card</option>
-                                                </select>
-                                            </div>
-
-                                            <!-- Items Select & Remove Section -->
-                                            <hr>
-                                            <h6 class="fw-bold text-success mb-2">Select / Add / Remove Food Items:</h6>
-                                            <div class="border rounded-3 p-3 mb-3 bg-light" style="max-height: 220px; overflow-y: auto;">
-                                                <div th:each="foodItem, fStat : ${allItems}" class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
-                                                    <div>
-                                                        <span class="fw-semibold" th:text="${foodItem.name}"></span>
-                                                        <small class="text-muted ms-2" th:text="${'Rs. ' + foodItem.price}"></small>
-                                                    </div>
-                                                    <div class="d-flex align-items-center">
-                                                        <input type="number" min="1" value="1" class="form-control form-control-sm me-2 edit-qty" style="width: 65px;"
-                                                               th:data-orderid="${order.orderId}"
-                                                               onchange="calcEditTotal(this.getAttribute('data-orderid'))">
-                                                        <input type="checkbox" class="form-check-input edit-item-chk"
-                                                               th:data-name="${foodItem.name}"
-                                                               th:data-price="${foodItem.price}"
-                                                               th:data-orderid="${order.orderId}"
-                                                               onchange="calcEditTotal(this.getAttribute('data-orderid'))">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <input type="hidden" name="itemName" th:id="${'finalItemName-' + order.orderId}" th:value="${order.itemName}">
-                                            <input type="hidden" name="totalPrice" th:id="${'finalTotalPrice-' + order.orderId}" th:value="${order.totalPrice}">
-
-                                            <div class="d-flex justify-content-between align-items-center bg-white p-3 border rounded-3 shadow-sm">
-                                                <span class="fw-bold text-secondary">Updated Total Amount:</span>
-                                                <span class="fs-4 fw-bold text-success" th:id="${'dispTotal-' + order.orderId}" th:text="${'Rs. ' + order.totalPrice}"></span>
-                                            </div>
-
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-                                            <button type="submit" class="btn btn-success fw-bold">Save Changes</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-
+                        <button th:id="'edit-btn-' + ${order.orderId}" class="btn btn-primary btn-sm me-2"
+                                th:onclick="openEditModal([[${order.orderId}]], [[${order.itemName}]], [[${order.totalPrice}]], [[${order.address}]], [[${order.phone}]], [[${order.customerName}]], [[${order.paymentMethod}]])">
+                            Edit Order
+                        </button>
+                        <a th:id="'cancel-btn-' + ${order.orderId}"
+                           th:href="@{/order/delete/{id}(id=${order.orderId})}"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Are you sure you want to cancel this order?');">
+                            Cancel Order
+                        </a>
                     </td>
+                </tr>
+                <tr th:if="${orders == null || orders.empty}">
+                    <td colspan="5" class="text-center text-muted">No placed orders found.</td>
                 </tr>
                 </tbody>
             </table>
@@ -152,113 +73,283 @@
     </div>
 </div>
 
-<script>
-    // Real-time Countdown Timer (5 Minutes)
-    function runTimer() {
-        const now = new Date().getTime();
-        const timers = document.querySelectorAll('.countdown-timer');
+<!-- EDIT ORDER MODAL -->
+<div class="modal fade" id="editOrderModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">✏️ Edit Order Items</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
 
-        timers.forEach((timer) => {
-            const idNum = timer.id.replace('timer-', '');
-            const actionBox = document.getElementById('actions-' + idNum);
-            const orderTime = parseInt(timer.getAttribute('data-timestamp'));
+            <form action="/order/customer-update" method="POST">
+                <input type="hidden" name="orderId" id="editOrderId">
+                <input type="hidden" name="customerName" id="editCustomerName">
+                <input type="hidden" name="phone" id="editPhone">
 
-            if (!orderTime || isNaN(orderTime)) return;
+                <div class="modal-body p-4">
 
-            const expireTime = orderTime + (5 * 60 * 1000);
-            const diff = expireTime - now;
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Delivery Address</label>
+                        <input type="text" class="form-control" name="address" id="editAddress" required>
+                    </div>
 
-            if (diff > 0) {
-                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const s = Math.floor((diff % (1000 * 60)) / 1000);
-                timer.innerHTML = m + "m " + (s < 10 ? "0" : "") + s + "s left";
-                timer.className = "badge bg-warning text-dark countdown-timer";
-            } else {
-                timer.innerHTML = "Time Expired (Confirmed)";
-                timer.className = "badge bg-secondary countdown-timer";
-                if (actionBox) {
-                    actionBox.innerHTML = '<span class="text-muted small"><i class="fas fa-lock me-1"></i>Locked</span>';
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Payment Method</label>
+                        <select class="form-select" name="paymentMethod" id="editPaymentMethod">
+                            <option value="Cash on Delivery">Cash on Delivery</option>
+                            <option value="Credit/Debit Card">Credit/Debit Card</option>
+                        </select>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <!-- 1. Currently Selected Items List (With Quantity Field & Total Price Update) -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-success fs-6 mb-2">🛒 Currently Selected Items:</label>
+                        <div id="selectedItemsContainer" class="border rounded p-3 bg-light" style="max-height: 250px; overflow-y: auto;">
+                            <!-- Dynamic Items with Quantity Control Render Here -->
+                        </div>
+                    </div>
+
+                    <!-- 2. Add More Food Items Section (With Quantity Picker) -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-primary fs-6 mb-2">➕ Add More Food Items (Optional):</label>
+                        <div class="row g-2 mb-2">
+                            <div class="col-md-4">
+                                <select id="categorySelect" class="form-select" onchange="onCategoryChange()">
+                                    <option value="" selected disabled>-- Category --</option>
+                                    <option value="Fast Food">Fast Food</option>
+                                    <option value="Beverages">Beverages</option>
+                                    <option value="Desserts">Desserts</option>
+                                    <option value="Main Course">Main Course</option>
+                                    <option value="Italian">Italian</option>
+                                    <option value="Snacks">Snacks</option>
+                                </select>
+                            </div>
+                            <div class="col-md-5">
+                                <select id="itemSelect" class="form-select" disabled>
+                                    <option value="" selected disabled>-- Select Food Item --</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <!-- Quantity Input for New Item -->
+                                <input type="number" id="newItemQty" class="form-control text-center" min="1" value="1" placeholder="Qty">
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-outline-primary btn-sm mt-1 fw-bold" onclick="addNewItemToOrder()">
+                            + Add Item to Order
+                        </button>
+                    </div>
+
+                    <!-- Hidden Inputs for Form Submission -->
+                    <input type="hidden" name="itemName" id="finalItemName">
+                    <input type="hidden" name="totalPrice" id="finalTotalPrice">
+
+                    <!-- Updated Total Display -->
+                    <div class="p-3 bg-light rounded border d-flex justify-content-between align-items-center mt-4">
+                        <span class="fw-bold fs-5 text-secondary">Updated Total Amount:</span>
+                        <span class="fw-bold fs-3 text-success" id="updatedTotalAmount">Rs. 0.00</span>
+                    </div>
+
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success px-4 fw-bold">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script th:inline="javascript">
+    const availableMenuItems = /*[[${allItems}]]*/ [];
+    let currentOrderItems = [];
+
+    // Dynamic Live Timer
+    function initTimers() {
+        const badges = document.querySelectorAll('[id^="status-badge-"]');
+        badges.forEach(badge => {
+            const orderId = badge.id.replace('status-badge-', '');
+            const timestamp = parseInt(badge.getAttribute('data-timestamp'));
+            const timerElement = document.getElementById(`timer-${orderId}`);
+            const editBtn = document.getElementById(`edit-btn-${orderId}`);
+            const cancelBtn = document.getElementById(`cancel-btn-${orderId}`);
+
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const elapsed = Math.floor((now - timestamp) / 1000);
+                const remaining = 300 - elapsed;
+
+                if (remaining <= 0) {
+                    if (badge) {
+                        badge.className = "badge bg-secondary fs-6";
+                        badge.textContent = "Locked (Confirmed)";
+                    }
+                    if (editBtn) editBtn.classList.add('disabled');
+                    if (cancelBtn) {
+                        cancelBtn.classList.add('disabled');
+                        cancelBtn.removeAttribute('href');
+                    }
+                } else {
+                    let minutes = Math.floor(remaining / 60);
+                    let seconds = remaining % 60;
+                    minutes = minutes < 10 ? '0' + minutes : minutes;
+                    seconds = seconds < 10 ? '0' + seconds : seconds;
+                    if (timerElement) timerElement.textContent = `${minutes}:${seconds}`;
                 }
             }
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
         });
     }
 
-    runTimer();
-    setInterval(runTimer, 1000);
+    window.onload = initTimers;
 
-    // Edit Modal එක open වන විට දැනට Order එකේ තියෙන Items සහ Qty Auto-Select කිරීම
-    function initModalItems(orderId, existingItemsStr) {
-        const modal = document.getElementById('editModal-' + orderId);
-        if (!modal) return;
+    // Open Modal and Parse Items
+    function openEditModal(orderId, itemNames, totalPrice, address, phone, customerName, paymentMethod) {
+        document.getElementById("editOrderId").value = orderId;
+        document.getElementById("editCustomerName").value = customerName;
+        document.getElementById("editAddress").value = address;
+        document.getElementById("editPhone").value = phone;
+        document.getElementById("editPaymentMethod").value = paymentMethod;
 
-        const checkboxes = modal.querySelectorAll('.edit-item-chk');
-        const qtys = modal.querySelectorAll('.edit-qty');
+        currentOrderItems = [];
+        if (itemNames) {
+            const parts = itemNames.split(', ');
+            parts.forEach(p => {
+                let itemNameStr = p;
+                let qty = 1;
 
-        // Reset all first
-        checkboxes.forEach((chk, idx) => {
-            chk.checked = false;
-            qtys[idx].value = 1;
-        });
-
-        // Parse existing items (e.g. "Chicken Burger (x2) Cheese Pizza (x1) ")
-        checkboxes.forEach((chk, idx) => {
-            const name = chk.getAttribute('data-name');
-            if (existingItemsStr.includes(name)) {
-                chk.checked = true;
-
-                // Quantity එක Extract කිරීම
-                const regExp = new RegExp(name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*\\(x(\\d+)\\)');
-                const match = existingItemsStr.match(regExp);
-                if (match && match[1]) {
-                    qtys[idx].value = parseInt(match[1]);
+                // Parse Quantity from (xN) string if present
+                const match = p.match(/(.+) \(x(\d+)\)/);
+                if (match) {
+                    itemNameStr = match[1].trim();
+                    qty = parseInt(match[2]);
                 }
-            }
-        });
 
-        calcEditTotal(orderId);
-    }
+                // Find matching item price from available menu
+                let unitPrice = 500;
+                if (availableMenuItems) {
+                    const found = availableMenuItems.find(m => m.name.toLowerCase() === itemNameStr.toLowerCase());
+                    if (found) unitPrice = found.price;
+                }
 
-    // Live Calculate Total & Item Details
-    function calcEditTotal(orderId) {
-        const modal = document.getElementById('editModal-' + orderId);
-        if (!modal) return;
-
-        const checkboxes = modal.querySelectorAll('.edit-item-chk');
-        const qtys = modal.querySelectorAll('.edit-qty');
-
-        let total = 0;
-        let itemSummary = '';
-        let count = 0;
-
-        checkboxes.forEach((chk, idx) => {
-            if (chk.checked) {
-                let price = parseFloat(chk.getAttribute('data-price'));
-                let name = chk.getAttribute('data-name');
-                let q = parseInt(qtys[idx].value) || 1;
-                total += (price * q);
-                itemSummary += `${name} (x${q}) `;
-                count++;
-            }
-        });
-
-        document.getElementById('dispTotal-' + orderId).innerText = 'Rs. ' + total.toFixed(2);
-        document.getElementById('finalTotalPrice-' + orderId).value = total;
-        document.getElementById('finalItemName-' + orderId).value = itemSummary;
-    }
-
-    // Validation for Edit Form
-    function validateEditForm(form) {
-        const checkboxes = form.querySelectorAll('.edit-item-chk');
-        let anyChecked = false;
-        checkboxes.forEach(chk => {
-            if (chk.checked) anyChecked = true;
-        });
-
-        if (!anyChecked) {
-            alert('Please select at least one item for your order!');
-            return false;
+                currentOrderItems.push({ name: itemNameStr, price: unitPrice, quantity: qty });
+            });
         }
-        return true;
+
+        renderSelectedItems();
+        const modal = new bootstrap.Modal(document.getElementById('editOrderModal'));
+        modal.show();
+    }
+
+    // Render Selected Items with Quantity Inputs
+    function renderSelectedItems() {
+        const container = document.getElementById("selectedItemsContainer");
+        container.innerHTML = "";
+
+        if (currentOrderItems.length === 0) {
+            container.innerHTML = '<p class="text-muted m-0 p-2">No items in order.</p>';
+            calculateTotal();
+            return;
+        }
+
+        currentOrderItems.forEach((item, index) => {
+            const itemRow = document.createElement("div");
+            itemRow.className = "d-flex justify-content-between align-items-center mb-2 p-2 bg-white rounded border";
+            itemRow.innerHTML = `
+            <div>
+                <strong>${item.name}</strong>
+                <span class="text-muted small ms-2">(Rs. ${item.price.toFixed(2)} each)</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <span class="small fw-bold">Qty:</span>
+                <input type="number" class="form-control form-control-sm qty-input" min="1" value="${item.quantity}"
+                       onchange="updateItemQuantity(${index}, this.value)">
+                <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeItemFromOrder(${index})" title="Remove Item">🗑️</button>
+            </div>
+        `;
+            container.appendChild(itemRow);
+        });
+
+        calculateTotal();
+    }
+
+    // Update Quantity of Existing Item
+    function updateItemQuantity(index, newQty) {
+        const qty = parseInt(newQty);
+        currentOrderItems[index].quantity = (qty > 0) ? qty : 1;
+        calculateTotal();
+    }
+
+    // Remove Item Entirely
+    function removeItemFromOrder(index) {
+        currentOrderItems.splice(index, 1);
+        renderSelectedItems();
+    }
+
+    // Category Change Handler
+    function onCategoryChange() {
+        const cat = document.getElementById("categorySelect").value;
+        const select = document.getElementById("itemSelect");
+        select.innerHTML = '<option value="" selected disabled>-- Select Food Item --</option>';
+
+        if (availableMenuItems) {
+            const filtered = availableMenuItems.filter(i => i.category === cat);
+            filtered.forEach(i => {
+                const opt = document.createElement("option");
+                opt.value = i.id;
+                opt.textContent = `${i.name} - Rs. ${i.price}`;
+                select.appendChild(opt);
+            });
+        }
+        select.disabled = false;
+    }
+
+    // Add New Item with Chosen Quantity
+    function addNewItemToOrder() {
+        const itemId = document.getElementById("itemSelect").value;
+        const qtyInput = document.getElementById("newItemQty").value;
+        const qty = parseInt(qtyInput) || 1;
+
+        if (!itemId) {
+            alert("Please select a food item first!");
+            return;
+        }
+
+        const item = availableMenuItems.find(i => i.id == itemId);
+        if (item) {
+            const existingIndex = currentOrderItems.findIndex(i => i.name.toLowerCase() === item.name.toLowerCase());
+            if (existingIndex > -1) {
+                currentOrderItems[existingIndex].quantity += qty;
+            } else {
+                currentOrderItems.push({ name: item.name, price: item.price, quantity: qty });
+            }
+            renderSelectedItems();
+
+            // Reset Inputs
+            document.getElementById("newItemQty").value = 1;
+            document.getElementById("itemSelect").value = "";
+        }
+    }
+
+    // Total Price & Form Inputs Calculation
+    function calculateTotal() {
+        let total = 0;
+        let itemStrings = [];
+
+        currentOrderItems.forEach(i => {
+            total += i.price * i.quantity;
+            itemStrings.push(`${i.name} (x${i.quantity})`);
+        });
+
+        document.getElementById("updatedTotalAmount").textContent = `Rs. ${total.toFixed(2)}`;
+        document.getElementById("finalItemName").value = itemStrings.join(", ");
+        document.getElementById("finalTotalPrice").value = total;
     }
 </script>
 </body>

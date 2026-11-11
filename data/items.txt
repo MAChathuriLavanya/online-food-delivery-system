@@ -1,8 +1,150 @@
-101;Chicken Burger;Fast Food;850.0;https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500
-102;Cheese Pizza;Italian;1650.0;https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500
-103;Club Sandwich;Snacks;650.0;https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=500
-104;Fried Rice;Main Course;950.0;https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=500
-105;Chicken Noodles;Main Course;900.0;https://images.unsplash.com/photo-1612927601601-6638404737ce?w=500
-106;Chocolate Milkshake;Beverages;450.0;https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=500
-107;Iced Coffee;Beverages;380.0;https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=500
-108;Submarine Sandwich;Fast Food;1100.0;https://images.unsplash.com/photo-1509722747041-616f39b57569?w=500
+id1;Cheese Burger;Fast Food;1200.0;https://images.unsplash.com/photo-1568901346375-23c9450c58cd
+id2;Chicken Pizza;Fast Food;2400.0;https://images.unsplash.com/photo-1513104890138-7c749659a591
+id3;Hot Dog;Fast Food;850.0;https://images.unsplash.com/photo-1619740455993-9e612b1af08a
+id4;French Fries;Fast Food;650.0;https://images.unsplash.com/photo-1573080496219-bb080dd4f877
+id5;Crispy Chicken Burger;Fast Food;1350.0;https://images.unsplash.com/photo-1568901346375-23c9450c58cd
+id6;BBQ Chicken Pizza;Fast Food;2600.0;https://images.unsplash.com/photo-1513104890138-7c749659a591
+id7;Veggie Wrap;Fast Food;750.0;https://images.unsplash.com/photo-1619740455993-9e612b1af08a
+id8;Chicken Submarine;Fast Food;1100.0;https://images.unsplash.com/photo-1568901346375-23c9450c58cd
+id9;Cheese Pizza;Fast Food;2100.0;https://images.unsplash.com/photo-1513104890138-7c749659a591
+id10;Chicken Nuggets;Fast Food;900.0;https://images.unsplash.com/photo-1573080496219-bb080dd4f877
+id11;Pepperoni Pizza;Fast Food;2500.0;https://images.unsplash.com/photo-1513104890138-7c749659a591
+id12;Double Cheese Burger;Fast Food;1550.0;https://images.unsplash.com/photo-1568901346375-23c9450c58cd
+id13;Chicken Club Sandwich;Fast Food;950.0;https://images.unsplash.com/photo-1528735602780-2552fd46c7af
+id14;Garlic Breadsticks;Fast Food;550.0;https://images.unsplash.com/photo-1619531006509-c55866120498
+id15;Crispy Fried Chicken;Fast Food;1400.0;https://images.unsplash.com/photo-1568901346375-23c9450c58cd
+id16;Fresh Orange Juice;Beverages;450.0;https://images.unsplash.com/photo-1613478223719-2ab802602423
+id17;Chocolate Milkshake;Beverages;650.0;https://images.unsplash.com/photo-1572490122747-3968b75cc699
+id18;Iced Coffee;Beverages;550.0;https://images.unsplash.com/photo-1517701604599-bb29b565090c
+id19;Strawberry Smoothie;Beverages;700.0;https://images.unsplash.com/photo-1505252585461-04db1eb84625
+id20;Lemon Iced Tea;Beverages;400.0;https://images.unsplash.com/photo-1556679343-c7306c1976bc
+id21;Vanilla Milkshake;Beverages;600.0;https://images.unsplash.com/photo-1572490122747-3968b75cc699
+id22;Mango Juice;Beverages;450.0;https://images.unsplash.com/photo-1600271886742-f049cd451bba
+id23;Iced Chocolate;Beverages;650.0;https://images.unsplash.com/photo-1517701604599-bb29b565090c
+id24;Cappuccino;Beverages;500.0;https://images.unsplash.com/photo-1534778101976-62847782c213
+id25;Mineral Water;Beverages;150.0;https://images.unsplash.com/photo-1523362628745-0c100150b504
+id26;Avocado Smoothie;Beverages;750.0;https://images.unsplash.com/photo-1505252585461-04db1eb84625
+id27;Hot Chocolate;Beverages;550.0;https://images.unsplash.com/photo-1517701604599-bb29b565090c
+id28;Green Tea;Beverages;300.0;https://images.unsplash.com/photo-1556679343-c7306c1976bc
+id29;Faluda;Beverages;500.0;https://images.unsplash.com/photo-1572490122747-3968b75cc699
+id30;Passion Fruit Juice;Beverages;450.0;https://images.unsplash.com/photo-1613478223719-2ab802602423
+id31;Chocolate Brownie;Desserts;500.0;https://images.unsplash.com/photo-1606313564200-e75d5e30476c
+id32;Strawberry Cheesecake;Desserts;850.0;https://images.unsplash.com/photo-1533134242443-d4fd215305ad
+id33;Vanilla Ice Cream Scoop;Desserts;350.0;https://images.unsplash.com/photo-1570197788417-0e82375c9371
+id34;Chocolate Lava Cake;Desserts;900.0;https://images.unsplash.com/photo-1606313564200-e75d5e30476c
+id35;Tiramisu Slice;Desserts;950.0;https://images.unsplash.com/photo-1533134242443-d4fd215305ad
+id36;Apple Pie;Desserts;650.0;https://images.unsplash.com/photo-1606313564200-e75d5e30476c
+id37;Waffle with Ice Cream;Desserts;800.0;https://images.unsplash.com/photo-1570197788417-0e82375c9371
+id38;Fruit Salad with Ice Cream;Desserts;550.0;https://images.unsplash.com/photo-1570197788417-0e82375c9371
+id39;Red Velvet Cake;Desserts;750.0;https://images.unsplash.com/photo-1533134242443-d4fd215305ad
+id40;Caramel Pudding;Desserts;400.0;https://images.unsplash.com/photo-1570197788417-0e82375c9371
+id41;Samosa Box;Snacks;250.0;https://images.unsplash.com/photo-1601050690597-df0568f70950
+id42;Spring Rolls;Snacks;400.0;https://images.unsplash.com/photo-1544025162-d76694265947
+id43;Chicken Patties;Snacks;250.0;https://images.unsplash.com/photo-1509440159596-0249088772ff
+id44;Fish Cutlets;Snacks;300.0;https://images.unsplash.com/photo-1604908176997-125f25cc6f3d
+id45;Potato Wedges;Snacks;500.0;https://images.unsplash.com/photo-1518013431117-eb1465fa5752
+id46;Onion Rings;Snacks;450.0;https://images.unsplash.com/photo-1639024471283-03518883512d
+id47;Chicken Roll;Snacks;350.0;https://images.unsplash.com/photo-1544025162-d76694265947
+id48;Egg Roti;Snacks;200.0;https://images.unsplash.com/photo-1601050690597-df0568f70950
+id49;Garlic Bread;Snacks;400.0;https://images.unsplash.com/photo-1619531006509-c55866120498
+id50;Cheese Toast;Snacks;350.0;https://images.unsplash.com/photo-1525351484163-7529414344d8
+id51;Crispy Fish Burger;Fast Food;1300.0;https://images.unsplash.com/photo-1568901346375-23c9450c58cd
+id52;Spicy Chicken Wings;Fast Food;1250.0;https://images.unsplash.com/photo-1567620832903-9fc6debc209f
+id53;Beef Burger;Fast Food;1450.0;https://images.unsplash.com/photo-1568901346375-23c9450c58cd
+id54;Hawaiian Pizza;Fast Food;2300.0;https://images.unsplash.com/photo-1513104890138-7c749659a591
+id55;Crispy Tacos;Fast Food;950.0;https://images.unsplash.com/photo-1565299585323-38d6b0865b47
+id56;Chicken Burrito;Fast Food;1150.0;https://images.unsplash.com/photo-1619740455993-9e612b1af08a
+id57;Mushroom Swiss Burger;Fast Food;1500.0;https://images.unsplash.com/photo-1568901346375-23c9450c58cd
+id58;Seafood Pizza;Fast Food;2700.0;https://images.unsplash.com/photo-1513104890138-7c749659a591
+id59;Cheesy Nachos;Fast Food;850.0;https://images.unsplash.com/photo-1513456852971-30c0b8199d4d
+id60;Loaded Fries;Fast Food;900.0;https://images.unsplash.com/photo-1573080496219-bb080dd4f877
+id61;Iced Matcha Latte;Beverages;750.0;https://images.unsplash.com/photo-1517701604599-bb29b565090c
+id62;Berry Blast Smoothie;Beverages;750.0;https://images.unsplash.com/photo-1505252585461-04db1eb84625
+id63;Peach Iced Tea;Beverages;450.0;https://images.unsplash.com/photo-1556679343-c7306c1976bc
+id64;Cold Brew Coffee;Beverages;600.0;https://images.unsplash.com/photo-1517701604599-bb29b565090c
+id65;Oreo Milkshake;Beverages;700.0;https://images.unsplash.com/photo-1572490122747-3968b75cc699
+id66;Pineapple Juice;Beverages;400.0;https://images.unsplash.com/photo-1613478223719-2ab802602423
+id67;Watermelon Juice;Beverages;350.0;https://images.unsplash.com/photo-1613478223719-2ab802602423
+id68;Caramel Macchiato;Beverages;650.0;https://images.unsplash.com/photo-1534778101976-62847782c213
+id69;Lemonade;Beverages;350.0;https://images.unsplash.com/photo-1613478223719-2ab802602423
+id70;Mocha Frappe;Beverages;700.0;https://images.unsplash.com/photo-1572490122747-3968b75cc699
+id71;Donut Box;Desserts;600.0;https://images.unsplash.com/photo-1527515637462-cff94eecc1ac
+id72;Choco Chip Cookie;Desserts;250.0;https://images.unsplash.com/photo-1558961363-fa8fdf82db35
+id73;Blueberry Muffin;Desserts;350.0;https://images.unsplash.com/photo-1509440159596-0249088772ff
+id74;Banana Split;Desserts;750.0;https://images.unsplash.com/photo-1570197788417-0e82375c9371
+id75;Churros with Chocolate;Desserts;650.0;https://images.unsplash.com/photo-1606313564200-e75d5e30476c
+id76;Mango Mousse;Desserts;500.0;https://images.unsplash.com/photo-1570197788417-0e82375c9371
+id77;Nutella Crêpe;Desserts;800.0;https://images.unsplash.com/photo-1570197788417-0e82375c9371
+id78;Eclair;Desserts;300.0;https://images.unsplash.com/photo-1533134242443-d4fd215305ad
+id79;Pancake Stack;Desserts;700.0;https://images.unsplash.com/photo-1570197788417-0e82375c9371
+id80;Macaron Pack;Desserts;900.0;https://images.unsplash.com/photo-1533134242443-d4fd215305ad
+id81;Vegetable Patties;Snacks;200.0;https://images.unsplash.com/photo-1509440159596-0249088772ff
+id82;Fish Roll;Snacks;250.0;https://images.unsplash.com/photo-1544025162-d76694265947
+id83;Cheese Samosa;Snacks;300.0;https://images.unsplash.com/photo-1601050690597-df0568f70950
+id84;Chicken Empanada;Snacks;400.0;https://images.unsplash.com/photo-1509440159596-0249088772ff
+id85;Popcorn Chicken;Snacks;650.0;https://images.unsplash.com/photo-1568901346375-23c9450c58cd
+id86;Mozzarella Sticks;Snacks;700.0;https://images.unsplash.com/photo-1531749668029-2db88e4276c7
+id87;Potato Chips Bowl;Snacks;300.0;https://images.unsplash.com/photo-1518013431117-eb1465fa5752
+id88;Mini Sausages;Snacks;500.0;https://images.unsplash.com/photo-1619740455993-9e612b1af08a
+id89;Corn Dog;Snacks;450.0;https://images.unsplash.com/photo-1619740455993-9e612b1af08a
+id90;Fried Dumplings;Snacks;600.0;https://images.unsplash.com/photo-1544025162-d76694265947
+id91;Zinger Burger;Fast Food;1350.0;https://images.unsplash.com/photo-1568901346375-23c9450c58cd
+id92;Four Cheese Pizza;Fast Food;2450.0;https://images.unsplash.com/photo-1513104890138-7c749659a591
+id93;Fish & Chips;Fast Food;1600.0;https://images.unsplash.com/photo-1573080496219-bb080dd4f877
+id94;Crispy Chicken Wrap;Fast Food;900.0;https://images.unsplash.com/photo-1619740455993-9e612b1af08a
+id95;Meat Lovers Pizza;Fast Food;2800.0;https://images.unsplash.com/photo-1513104890138-7c749659a591
+id96;Double Bacon Burger;Fast Food;1650.0;https://images.unsplash.com/photo-1568901346375-23c9450c58cd
+id97;Veggie Burger;Fast Food;950.0;https://images.unsplash.com/photo-1568901346375-23c9450c58cd
+id98;Spicy Beef Wrap;Fast Food;1050.0;https://images.unsplash.com/photo-1619740455993-9e612b1af08a
+id99;Mushroom Pizza;Fast Food;2200.0;https://images.unsplash.com/photo-1513104890138-7c749659a591
+id100;Sliders Combo;Fast Food;1400.0;https://images.unsplash.com/photo-1568901346375-23c9450c58cd
+id101;Kiwi Smoothie;Beverages;650.0;https://images.unsplash.com/photo-1505252585461-04db1eb84625
+id102;Espresso;Beverages;350.0;https://images.unsplash.com/photo-1534778101976-62847782c213
+id103;Americano;Beverages;400.0;https://images.unsplash.com/photo-1534778101976-62847782c213
+id104;Milk Coffee;Beverages;350.0;https://images.unsplash.com/photo-1517701604599-bb29b565090c
+id105;Mint Mojito Mocktail;Beverages;550.0;https://images.unsplash.com/photo-1613478223719-2ab802602423
+id106;Blue Lagoon Mocktail;Beverages;600.0;https://images.unsplash.com/photo-1613478223719-2ab802602423
+id107;Chocolate Smoothie;Beverages;700.0;https://images.unsplash.com/photo-1572490122747-3968b75cc699
+id108;Bubble Tea;Beverages;800.0;https://images.unsplash.com/photo-1572490122747-3968b75cc699
+id109;Apple Juice;Beverages;400.0;https://images.unsplash.com/photo-1613478223719-2ab802602423
+id110;Papaya Smoothie;Beverages;500.0;https://images.unsplash.com/photo-1505252585461-04db1eb84625
+id111;Chocolate Tart;Desserts;600.0;https://images.unsplash.com/photo-1606313564200-e75d5e30476c
+id112;Cupcake Box;Desserts;750.0;https://images.unsplash.com/photo-1509440159596-0249088772ff
+id113;Strawberry Ice Cream;Desserts;350.0;https://images.unsplash.com/photo-1570197788417-0e82375c9371
+id114;Panna Cotta;Desserts;550.0;https://images.unsplash.com/photo-1570197788417-0e82375c9371
+id115;Chocolate Donut;Desserts;250.0;https://images.unsplash.com/photo-1527515637462-cff94eecc1ac
+id116;Glazed Donut;Desserts;220.0;https://images.unsplash.com/photo-1527515637462-cff94eecc1ac
+id117;Cinnamon Roll;Desserts;450.0;https://images.unsplash.com/photo-1509440159596-0249088772ff
+id118;Fruit Tart;Desserts;500.0;https://images.unsplash.com/photo-1533134242443-d4fd215305ad
+id119;Black Forest Cake Slice;Desserts;700.0;https://images.unsplash.com/photo-1533134242443-d4fd215305ad
+id120;Chocolate Sundae;Desserts;650.0;https://images.unsplash.com/photo-1570197788417-0e82375c9371
+id121;Chicken Cutlet;Snacks;150.0;https://images.unsplash.com/photo-1604908176997-125f25cc6f3d
+id122;Beef Samosa;Snacks;300.0;https://images.unsplash.com/photo-1601050690597-df0568f70950
+id123;Garlic Fries;Snacks;550.0;https://images.unsplash.com/photo-1573080496219-bb080dd4f877
+id124;Cheesy Fries;Snacks;650.0;https://images.unsplash.com/photo-1573080496219-bb080dd4f877
+id125;Spicy Nuggets;Snacks;600.0;https://images.unsplash.com/photo-1573080496219-bb080dd4f877
+id126;Veggie Spring Roll;Snacks;300.0;https://images.unsplash.com/photo-1544025162-d76694265947
+id127;Fish Patties;Snacks;220.0;https://images.unsplash.com/photo-1509440159596-0249088772ff
+id128;Egg Bun;Snacks;180.0;https://images.unsplash.com/photo-1509440159596-0249088772ff
+id129;Chicken Bun;Snacks;220.0;https://images.unsplash.com/photo-1509440159596-0249088772ff
+id130;Sausage Roll;Snacks;250.0;https://images.unsplash.com/photo-1544025162-d76694265947
+id131;Chicken Melt Burger;Fast Food;1400.0;https://images.unsplash.com/photo-1568901346375-23c9450c58cd
+id132;Buffalo Wings;Fast Food;1300.0;https://images.unsplash.com/photo-1567620832903-9fc6debc209f
+id133;Margherita Pizza;Fast Food;1900.0;https://images.unsplash.com/photo-1513104890138-7c749659a591
+id134;Crispy Fish Sandwich;Fast Food;1100.0;https://images.unsplash.com/photo-1528735602780-2552fd46c7af
+id135;Triple Cheese Burger;Fast Food;1750.0;https://images.unsplash.com/photo-1568901346375-23c9450c58cd
+id136;Hot Chocolate Milkshake;Beverages;700.0;https://images.unsplash.com/photo-1572490122747-3968b75cc699
+id137;Ice Cream Soda;Beverages;500.0;https://images.unsplash.com/photo-1613478223719-2ab802602423
+id138;Peach Smoothie;Beverages;650.0;https://images.unsplash.com/photo-1505252585461-04db1eb84625
+id139;Cold Chocolate Latte;Beverages;600.0;https://images.unsplash.com/photo-1517701604599-bb29b565090c
+id140;Fresh Lime Soda;Beverages;300.0;https://images.unsplash.com/photo-1613478223719-2ab802602423
+id141;Chocolate Lava Cake with Ice Cream;Desserts;1100.0;https://images.unsplash.com/photo-1606313564200-e75d5e30476c
+id142;Matcha Cheesecake;Desserts;900.0;https://images.unsplash.com/photo-1533134242443-d4fd215305ad
+id143;Brownie Ice Cream Tower;Desserts;950.0;https://images.unsplash.com/photo-1570197788417-0e82375c9371
+id144;Banana Bread Slice;Desserts;350.0;https://images.unsplash.com/photo-1509440159596-0249088772ff
+id145;Apple Strudel;Desserts;650.0;https://images.unsplash.com/photo-1606313564200-e75d5e30476c
+id146;Fried Cheese Balls;Snacks;500.0;https://images.unsplash.com/photo-1531749668029-2db88e4276c7
+id147;Spicy Potato Samosa;Snacks;200.0;https://images.unsplash.com/photo-1601050690597-df0568f70950
+id148;Sweet Corn Cup;Snacks;300.0;https://images.unsplash.com/photo-1518013431117-eb1465fa5752
+id149;Chicken Shawarma Roll;Snacks;650.0;https://images.unsplash.com/photo-1544025162-d76694265947
+id150;Garlic Cheese Roll;Snacks;400.0;https://images.unsplash.com/photo-1619531006509-c55866120498

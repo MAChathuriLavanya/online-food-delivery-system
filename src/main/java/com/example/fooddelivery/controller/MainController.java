@@ -6,12 +6,14 @@ import com.example.fooddelivery.model.FoodItem;
 import com.example.fooddelivery.model.Order;
 import com.example.fooddelivery.model.User;
 import com.example.fooddelivery.service.FileStorageService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Controller
 public class MainController {
@@ -36,14 +38,18 @@ public class MainController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam String username, @RequestParam String password, Model model) {
+    public String login(@RequestParam String username, @RequestParam String password, HttpSession session, Model model) {
         if (PERMANENT_ADMIN_USER.equals(username) && PERMANENT_ADMIN_PASS.equals(password)) {
+            session.setAttribute("loggedInUser", PERMANENT_ADMIN_USER);
             return "redirect:/admin";
         }
 
         List<User> users = fileService.getAllUsers();
         for (User u : users) {
             if (u.getUsername().equals(username) && u.getPassword().equals(password)) {
+                // Log වුණු User ගේ Username එක Session එකේ තබා ගැනීම
+                session.setAttribute("loggedInUser", u.getUsername());
+
                 if ("ADMIN".equals(u.getRole())) {
                     return "redirect:/admin";
                 } else {
@@ -54,6 +60,12 @@ public class MainController {
 
         model.addAttribute("error", "Invalid Username or Password!");
         return "login";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate(); // User Logout වුණාම Session එක Clear කිරීම
+        return "redirect:/login";
     }
 
     @PostMapping("/register")
@@ -157,9 +169,21 @@ public class MainController {
     }
 
     @GetMapping("/my-orders")
-    public String myOrders(Model model) {
-        model.addAttribute("orders", fileService.getAllOrders());
-        model.addAttribute("allItems", fileService.getAllItems()); // Customer ට Items Select කිරීමට
+    public String myOrders(HttpSession session, Model model) {
+        String loggedInUser = (String) session.getAttribute("loggedInUser");
+
+        // User log වෙලා නැත්නම් Login පේජ් එකට හරවා යැවීම
+        if (loggedInUser == null) {
+            return "redirect:/login";
+        }
+
+        // Logged in user ගේ Orders පමණක් Filter කර ගැනීම
+        List<Order> userOrders = fileService.getAllOrders().stream()
+                .filter(order -> loggedInUser.equalsIgnoreCase(order.getCustomerName()))
+                .collect(Collectors.toList());
+
+        model.addAttribute("orders", userOrders);
+        model.addAttribute("allItems", fileService.getAllItems());
         return "my-orders";
     }
 
@@ -169,11 +193,17 @@ public class MainController {
                                 @RequestParam String customerName,
                                 @RequestParam String address,
                                 @RequestParam String phone,
-                                @RequestParam String paymentMethod) {
+                                @RequestParam String paymentMethod,
+                                HttpSession session) {
+
+        String loggedInUser = (String) session.getAttribute("loggedInUser");
+
+        // Logged in user ඉන්නවා නම් එයාගේ Username එක Customer Name ලෙස භාවිතය
+        String finalCustomerName = (loggedInUser != null) ? loggedInUser : customerName;
 
         String orderId = UUID.randomUUID().toString().substring(0, 5);
         long currentTime = System.currentTimeMillis();
-        Order newOrder = new Order(orderId, customerName, address, phone, itemName, price, paymentMethod, currentTime);
+        Order newOrder = new Order(orderId, finalCustomerName, address, phone, itemName, price, paymentMethod, currentTime);
         fileService.saveOrder(newOrder);
 
         return "redirect:/my-orders";
